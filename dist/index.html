@@ -1,0 +1,197 @@
+<!doctype html>
+<html lang="th">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="เกมทบทวนศัพท์ Day 1 หมวดคนและสรรพนาม 25 คำ ฝึกความหมาย พินอิน พิมพ์จีน และโทน"><title>Day 1 · Chinese Playroom</title>
+<style>
+:root{--bg:#eef3fa;--paper:#fff;--ink:#142541;--muted:#596b85;--line:#d8e1ef;--blue:#244ed9;--blue-light:#e9eeff;--green:#08774d;--red:#ba3047;--shadow:0 14px 42px #2139630c;font-family:Tahoma,'Leelawadee UI',system-ui,sans-serif;color:var(--ink);background:var(--bg);font-size:16px}
+*{box-sizing:border-box}body{margin:0}button,input{font:inherit}button{cursor:pointer;touch-action:manipulation}button:disabled{cursor:default}button:focus-visible,a:focus-visible,input:focus-visible,summary:focus-visible{outline:3px solid #df8517;outline-offset:4px}button{color:inherit}a{color:var(--blue)}header{height:85px;border-bottom:1px solid var(--line);background:#fff;display:flex;align-items:center;justify-content:space-between;padding:0 max(24px,calc((100vw - 1200px)/2));gap:16px}.brand{display:flex;align-items:center;gap:12px;font-weight:bold}.brandmark{background:var(--blue);color:white;width:42px;height:42px;display:grid;place-items:center;border-radius:12px;font-size:26px}.brand small{display:block;font-size:12px;font-weight:normal;letter-spacing:1.8px;color:var(--muted);margin-top:4px}.pill{border:1px solid var(--line);border-radius:30px;padding:8px 14px;font-size:14px;white-space:nowrap}.shell{max-width:1200px;margin:32px auto;padding:0 24px;display:grid;grid-template-columns:250px minmax(0,1fr);gap:32px}.sidebar h1{font-size:28px;margin:0 0 7px}.sub{color:var(--muted);font-size:14px;line-height:1.8}.eyebrow{font-size:12px;letter-spacing:2px;font-weight:bold;color:var(--blue);margin-bottom:10px}.modes{display:grid;gap:9px;margin-top:28px}.mode{background:transparent;border:1px solid transparent;border-radius:13px;display:flex;gap:12px;align-items:center;padding:13px 12px;text-align:left;width:100%}.mode:hover{background:#e2eaf7}.mode.active{background:#fff;border-color:var(--line);box-shadow:var(--shadow)}.mode .symbol{display:grid;place-items:center;width:35px;height:35px;border-radius:9px;background:#dfe7f4;color:#294776;font-size:19px;flex-shrink:0}.mode.active .symbol{background:var(--blue);color:white}.mode b{display:block;font-size:15px}.mode small{display:block;color:var(--muted);font-size:12px;margin-top:5px}.side-note{margin-top:25px;border-top:1px solid var(--line);padding-top:18px;font-size:13px;color:var(--muted);line-height:1.8}.workspace{min-width:0}.topline{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:18px}.topline h2{font-size:20px;margin:0}.smallbtn{background:white;border:1px solid var(--line);padding:9px 14px;border-radius:9px;font-size:14px}.smallbtn:hover{border-color:var(--blue);color:var(--blue)}.card{background:var(--paper);border:1px solid var(--line);border-radius:22px;box-shadow:var(--shadow);overflow:hidden}.card-inner{padding:30px 36px}.statusbar{display:flex;justify-content:space-between;align-items:center;font-size:14px;color:var(--muted);gap:10px}.statusbar strong{color:var(--blue)}progress{appearance:none;display:block;width:100%;height:6px;border:0;margin-top:16px;background:#e8eef8;border-radius:10px}progress::-webkit-progress-bar{background:#e8eef8;border-radius:10px}progress::-webkit-progress-value{background:var(--blue);border-radius:10px}progress::-moz-progress-bar{background:var(--blue);border-radius:10px}.prompt{text-align:center;padding:30px 0 20px}.prompt p{color:var(--muted);font-size:15px;margin:0 0 20px}.hanzi{font-family:'Microsoft YaHei','PingFang SC','Noto Sans CJK SC',sans-serif;font-size:76px;letter-spacing:5px;line-height:1.5;font-weight:500;margin:5px 0}.meaning-prompt{font-size:30px;line-height:1.6;margin:22px 0;letter-spacing:0}.pinyin{font-size:26px;color:var(--blue);font-family:system-ui,sans-serif;margin:9px 0}.listen{background:var(--blue-light);color:var(--blue);border:0;border-radius:30px;font-size:14px;padding:9px 17px;margin-top:10px}.choices{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:15px 0}.choice{background:#fff;border:1.5px solid var(--line);border-radius:12px;padding:18px;text-align:left;display:flex;align-items:center;gap:13px;min-height:66px;line-height:1.5}.choice:hover:not(:disabled){border-color:var(--blue);background:#f5f7ff}.choice span{color:var(--muted);font-size:13px;display:grid;place-items:center;background:#f0f4fa;border-radius:7px;width:27px;height:27px;flex-shrink:0}.choice.pinyin-choice{font-family:system-ui,sans-serif;font-size:22px}.choice.correct{background:#e9f8ef;border-color:#41a878;color:#08643f}.choice.wrong{background:#fff0f2;border-color:#d7586b;color:#9f2035}.choice:disabled{opacity:1}.hint{font-size:14px;color:var(--muted);line-height:1.7}.footerbar{padding:20px 36px;border-top:1px solid var(--line);background:#fbfcff;display:flex;align-items:center;justify-content:space-between;gap:20px}.feedback{font-size:15px;line-height:1.7;flex:1}.feedback.good{color:var(--green)}.feedback.bad{color:var(--red)}.primary{border:0;background:var(--blue);color:#fff;border-radius:11px;padding:13px 24px;min-height:48px;font-weight:bold;white-space:nowrap}.primary:hover{background:#183bb1}.primary:disabled{background:#d6deec;color:#697992}.answer-input{border:1.5px solid #abbcd6;background:#fbfcff;border-radius:12px;padding:16px;font-size:23px;display:block;width:100%;margin:8px 0 12px;font-family:system-ui,'Microsoft YaHei',sans-serif}.answer-input:disabled{color:#50637f}.answer-label{display:block;font-size:14px;margin:10px 0}.tone-row{border:1px solid var(--line);border-radius:13px;padding:14px;display:flex;align-items:center;gap:16px;margin:12px 0}.syllable{width:76px;flex-shrink:0;font-size:24px;font-family:system-ui,sans-serif}.syllable small{font-size:12px;color:var(--muted);display:block;margin-bottom:4px}.tone-buttons{display:grid;grid-template-columns:repeat(5,1fr);gap:7px;flex:1}.tone-btn{background:#f4f7fc;border:1px solid var(--line);border-radius:8px;padding:9px 4px;font-size:15px;min-height:48px}.tone-btn em{font-style:normal;font-size:22px;display:block;font-family:system-ui,sans-serif}.tone-btn[aria-pressed=true]{background:var(--blue-light);border:2px solid var(--blue);color:var(--blue)}.tone-btn.correct{border-color:var(--green);background:#e9f8ef}.tone-btn.wrong{border-color:var(--red);background:#fff0f2}.under{margin:20px 4px;color:var(--muted);font-size:13px;line-height:1.8}details{margin-top:18px}summary{cursor:pointer;color:var(--blue);font-size:14px}details p{font-size:14px;line-height:1.9;color:var(--muted)}.summary{text-align:center;padding:34px 10px}.score{font-family:system-ui,sans-serif;font-size:76px;font-weight:750;color:var(--blue);margin:12px 0}.score small{font-size:26px;color:var(--muted)}.summary h3{font-size:25px}.summary-actions{display:flex;flex-wrap:wrap;justify-content:center;gap:10px;margin-top:25px}.mistakes{list-style:none;padding:0;display:grid;gap:8px;margin-top:25px}.mistakes li{display:flex;align-items:center;justify-content:space-between;gap:12px;background:#f4f7fc;border-radius:10px;padding:12px 16px;text-align:left;line-height:1.6}.mistakes b{font-size:22px;font-family:'Microsoft YaHei',sans-serif}.mistakes small{color:var(--muted);font-family:system-ui,sans-serif;font-size:15px;margin-left:8px}.match-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:22px}.match-col{display:grid;gap:10px}.match-tile{min-height:66px;padding:12px;border:1.5px solid var(--line);border-radius:12px;background:white;font-size:16px;line-height:1.5}.match-tile.zh{font-size:28px;font-family:'Microsoft YaHei',sans-serif}.match-tile[aria-pressed=true]{border-color:var(--blue);background:var(--blue-light)}.match-tile.matched{background:#e9f8ef;border-color:#b4ddc7;color:var(--green)}.match-tile:hover:not(:disabled){border-color:var(--blue)}.flash{padding:22px 0;min-height:305px;text-align:center}.flash-answer{min-height:80px}.flash-nav{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}.flash .meaning-prompt{font-size:23px}.center{text-align:center}.badge{font-size:14px;color:var(--green);background:#e7f6ef;padding:6px 10px;border-radius:30px}.audio-note{font-size:13px;line-height:1.7;color:var(--muted);min-height:1px;margin:12px 0 0}.live:empty{display:none}.action-link{background:transparent;color:var(--blue);border:0;font-size:14px;padding:8px}.source{margin-top:16px;font-size:12px}.source a{color:var(--muted)}.legend{display:flex;flex-wrap:wrap;gap:12px;font-size:13px;line-height:1.7;color:var(--muted);padding:12px 0}.empty{padding:15px;color:var(--muted)}@media(max-width:850px){header{padding:0 20px}.shell{grid-template-columns:1fr;margin:22px auto;gap:22px}.sidebar h1{font-size:25px}.modes{grid-template-columns:repeat(3,1fr);margin-top:18px;gap:7px}.mode{padding:10px 8px;gap:7px;border:1px solid var(--line)}.mode small{display:none}.mode b{font-size:13px}.mode .symbol{width:28px;height:28px;font-size:16px}.side-note{display:none}.sidebar>.sub{display:none}.eyebrow{margin-bottom:6px}.card-inner{padding:25px}.footerbar{padding:20px 25px}.shell{max-width:800px}.hanzi{font-size:66px}}@media(max-width:500px){header{height:72px;padding:0 16px}.brand small{font-size:10px}.brand{font-size:14px}.pill{font-size:12px;padding:7px 10px}.shell{padding:0 14px;margin-top:20px}.modes{grid-template-columns:repeat(2,1fr)}.mode:last-child{grid-column:1/-1}.card-inner{padding:20px 16px}.choices{grid-template-columns:1fr}.choice{padding:13px;min-height:55px}.prompt{padding-top:24px}.hanzi{font-size:58px}.footerbar{padding:17px 16px;flex-wrap:wrap;gap:12px}.footerbar .primary{margin-left:auto}.topline h2{font-size:18px}.smallbtn{padding:8px 11px}.tone-row{display:block;padding:10px}.syllable{display:flex;gap:12px;width:auto;align-items:center;margin-bottom:8px}.syllable small{margin:0}.tone-buttons{gap:5px}.tone-btn{font-size:13px}.tone-btn em{font-size:20px}.match-grid{gap:10px}.match-tile{font-size:14px;min-height:75px}.score{font-size:62px}.mistakes li{flex-wrap:wrap}.meaning-prompt{font-size:25px}}@media(prefers-reduced-motion:no-preference){.card{animation:appear .2s ease-out}@keyframes appear{from{opacity:.5;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}}
+</style></head>
+<body>
+<header><div class="brand"><span class="brandmark" lang="zh-CN">学</span><div>Chinese Playroom<small>VOCABULARY PRACTICE</small></div></div><span class="pill">DAY 1 · 25 คำ</span></header>
+<div class="shell"><aside class="sidebar"><div class="eyebrow">เลือกเกมแล้วเริ่มได้เลย</div><h1>คนและสรรพนาม</h1><div class="sub">ค่อย ๆ จำ ทีละคำ ทีละทักษะ</div><nav class="modes" aria-label="เลือกเกม" id="modes"></nav><div class="side-note">แต่ละเกมสุ่มครบ 25 คำ<br>ตอบแล้วดูเฉลยทันที<br>จบรอบแล้วทบทวนเฉพาะคำที่ผิด</div></aside><main class="workspace" id="main" tabindex="-1"><div class="topline"><h2 id="mode-title">เลือกความหมาย</h2><button class="smallbtn" id="restart">เริ่มรอบใหม่ ↻</button></div><section class="card" id="game" aria-label="พื้นที่เล่นเกม"></section><p class="audio-note" id="audio-note" role="status"></p><div class="under" id="under"></div><details><summary>วิธีพิมพ์พินอินและอ่านโทน</summary><p>ใช้พินอินมีเครื่องหมาย เช่น <b>wǒmen</b> หรือพินอินกับเลขโทน เช่น <b>wo3 men5</b> ช่องว่างไม่ส่งผลต่อคำตอบ เสียงเบาใช้ 5 หรือ 0 หรือไม่ใส่เลข เช่น wo3men ก็ได้ ส่วนพยางค์เสียง 1–4 ต้องระบุโทนให้ครบ</p><p>1 = สูงเรียบ (ā) · 2 = ไต่ขึ้น (á) · 3 = ต่ำแล้วขึ้น (ǎ) · 4 = ตกลง (à) · 5 = เสียงเบา (a) เสียงเบาไม่ใช่เสียง 1 เกมยึดรูปพินอินของคำในบทเรียน Day 1 ไม่ได้ทดสอบการเปลี่ยนเสียงในประโยค</p><p>คำว่า 他 และ 她 อ่าน tā เหมือนกัน เกมจะแสดงตัวจีนหรือความหมายเพื่อให้แยกได้ชัดเจน โหมดพิมพ์ตัวจีนต้องใช้แป้นพิมพ์ภาษาจีนของอุปกรณ์ ส่วนโหมดพิมพ์พินอินใช้แป้นภาษาอังกฤษได้</p></details><div class="source"><a href="https://chatgpt.com/share/6aa7a032-71b4-83ec-94e4-d605e74cefd9" target="_blank" rel="noopener noreferrer">รายการคำจากบทเรียน Day 1 เดิม ↗</a></div></main></div>
+<noscript><p>กรุณาเปิด JavaScript ในเบราว์เซอร์เพื่อเล่นเกม</p></noscript>
+<script>
+const rawWords = [
+ ['我','wǒ','ฉัน / ผม','wo3'],
+ ['你','nǐ','คุณ / เธอ (ผู้ที่เราพูดด้วย)','ni3'],
+ ['他','tā','เขา (ผู้ชาย)','ta1'],
+ ['她','tā','เธอ / หล่อน (ผู้หญิง)','ta1'],
+ ['我们','wǒmen','พวกเรา','wo3 men5'],
+ ['人','rén','คน / มนุษย์','ren2'],
+ ['朋友','péngyou','เพื่อน','peng2 you5'],
+ ['同学','tóngxué','เพื่อนร่วมชั้น','tong2 xue2'],
+ ['老师','lǎoshī','ครู / อาจารย์','lao3 shi1'],
+ ['学生','xuésheng','นักเรียน','xue2 sheng5'],
+ ['先生','xiānsheng','คุณผู้ชาย / นาย','xian1 sheng5'],
+ ['小姐','xiǎojie','คุณผู้หญิง / นางสาว','xiao3 jie5'],
+ ['爸爸','bàba','พ่อ','ba4 ba5'],
+ ['妈妈','māma','แม่','ma1 ma5'],
+ ['您','nín','คุณ (สุภาพ)','nin2'],
+ ['大家','dàjiā','ทุกคน','da4 jia1'],
+ ['孩子','háizi','เด็ก / ลูก','hai2 zi5'],
+ ['服务员','fúwùyuán','พนักงานบริการ','fu2 wu4 yuan2'],
+ ['经理','jīnglǐ','ผู้จัดการ','jing1 li3'],
+ ['同事','tóngshì','เพื่อนร่วมงาน','tong2 shi4'],
+ ['邻居','línjū','เพื่อนบ้าน','lin2 ju1'],
+ ['别人','biérén','คนอื่น / ผู้อื่น','bie2 ren2'],
+ ['客人','kèrén','แขก / ผู้มาเยือน','ke4 ren2'],
+ ['亲戚','qīnqi','ญาติ','qin1 qi5'],
+ ['顾客','gùkè','ลูกค้า','gu4 ke4']
+];
+const toneVowels={a:'āáǎà',e:'ēéěè',i:'īíǐì',o:'ōóǒò',u:'ūúǔù',ü:'ǖǘǚǜ'};
+function markTone(base,tone){
+ if(tone===5)return base;
+ let pos=base.indexOf('a');
+ if(pos<0)pos=base.indexOf('e');
+ if(pos<0&&base.includes('ou'))pos=base.indexOf('o');
+ if(pos<0)for(let i=base.length-1;i>=0;i--)if(toneVowels[base[i]]){pos=i;break;}
+ return base.slice(0,pos)+toneVowels[base[pos]][tone-1]+base.slice(pos+1);
+}
+const WORDS=rawWords.map(([hanzi,pinyin,meaning,numeric],id)=>({id,hanzi,pinyin,meaning,syllables:numeric.split(' ').map(s=>({base:s.slice(0,-1),tone:Number(s.at(-1)),marked:markTone(s.slice(0,-1),Number(s.at(-1)))}))}));
+function normalizePinyin(s){return s.normalize('NFC').toLowerCase().trim().replace(/[\s'’\-]/g,'');}
+function acceptsPinyin(word,input){
+ const value=normalizePinyin(input);
+ const candidates=word.syllables.reduce((forms,s)=>{
+  const variations=s.tone===5?[s.base,s.base+'5',s.base+'0']:[s.marked,s.base+s.tone];
+  return forms.flatMap(prefix=>variations.map(v=>prefix+v));
+ },['']);
+ return candidates.includes(value);
+}
+function shuffle(items){const a=[...items];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+function optionsFor(word,type){
+ const key=type==='meaning'?'meaning':'pinyin';
+ return shuffle([word[key],...shuffle([...new Set(WORDS.map(w=>w[key]))].filter(x=>x!==word[key])).slice(0,3)]);
+}
+class Round {
+ constructor(mode,words){this.mode=mode;this.queue=shuffle(words);this.index=0;this.score=0;this.answered=false;this.mistakes=[];this.lastCorrect=null;}
+ get current(){return this.queue[this.index];}
+ get done(){return this.index>=this.queue.length;}
+ submit(correct){if(this.done||this.answered)return false;this.answered=true;this.lastCorrect=Boolean(correct);if(correct)this.score++;else this.mistakes.push(this.current);return true;}
+ next(){if(!this.answered||this.done)return false;this.index++;this.answered=false;this.lastCorrect=null;return true;}
+}
+class MatchingRound {
+ constructor(words){this.words=words;this.matched=new Set();this.errors=0;}
+ choose(left,right){if(this.matched.has(left)||this.matched.has(right))return null;if(left!==right){this.errors++;return false;}this.matched.add(left);return true;}
+ get done(){return this.matched.size===this.words.length;}
+}
+if(typeof module!=='undefined')module.exports={WORDS,acceptsPinyin,optionsFor,Round,MatchingRound,shuffle,markTone};
+
+const MODES=[
+ {id:'meaning',name:'เลือกความหมาย',desc:'จีน → ไทย',symbol:'文',instruction:'คำนี้มีความหมายว่าอะไร?'},
+ {id:'reading',name:'เลือกคำอ่าน',desc:'จีน → พินอิน',symbol:'ā',instruction:'เลือกพินอินที่ตรงกับคำนี้'},
+ {id:'pinyin',name:'พิมพ์พินอิน',desc:'ฝึกสะกดพร้อมโทน',symbol:'⌨',instruction:'พิมพ์คำอ่าน พร้อมระบุโทน'},
+ {id:'hanzi',name:'พิมพ์ตัวจีน',desc:'ไทย → 汉字',symbol:'字',instruction:'คำนี้เขียนเป็นภาษาจีนว่าอย่างไร?'},
+ {id:'tones',name:'แยกโทนพินอิน',desc:'เลือกโทนทีละพยางค์',symbol:'ǎ',instruction:'เลือกโทนให้ครบทุกพยางค์'},
+ {id:'matching',name:'จับคู่คำศัพท์',desc:'จับคู่จีนกับความหมาย',symbol:'⇄',instruction:'เลือกตัวจีน แล้วเลือกความหมายที่คู่กัน'},
+ {id:'flash',name:'บัตรคำทบทวน',desc:'พลิกดูคำอ่านและคำแปล',symbol:'▤',instruction:''}
+];
+const $=id=>document.getElementById(id);
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+let mode='meaning',round=null,options=[],typed='',selectedTones=[],flashWords=[],flashIndex=0,flipped=false;
+let matchingWords=[],matchingIndex=0,matching=null,leftSelected=null,rightSelected=null,rightOrder=[],matchingErrors=0,matchMessage='',matchMistakes=new Set();
+const toneNames=['','1 · สูงเรียบ','2 · ไต่ขึ้น','3 · ต่ำแล้วขึ้น','4 · ตกลง','5 · เสียงเบา'];
+function config(){return MODES.find(m=>m.id===mode);}
+function renderNav(){ $('modes').innerHTML=MODES.map(m=>`<button class="mode ${m.id===mode?'active':''}" aria-current="${m.id===mode?'page':'false'}" data-mode="${m.id}"><span class="symbol" aria-hidden="true">${m.symbol}</span><span><b>${m.name}</b><small>${m.desc}</small></span></button>`).join('');$('mode-title').textContent=config().name; }
+function cancelSpeech(){if('speechSynthesis'in window)window.speechSynthesis.cancel();}
+function start(nextMode,words=WORDS){
+ cancelSpeech();mode=nextMode;typed='';selectedTones=[];$('audio-note').textContent='';renderNav();
+ if(mode==='flash'){flashWords=[...words];flashIndex=0;flipped=false;renderFlash();}
+ else if(mode==='matching'){matchingWords=shuffle(words);matchingIndex=0;matchingErrors=0;matchMistakes=new Set();startMatchBoard();}
+ else{round=new Round(mode,words);prepareQuestion();renderQuestion();}
+}
+function prepareQuestion(){typed='';selectedTones=round.current?round.current.syllables.map(()=>null):[];options=round.current&&['meaning','reading'].includes(mode)?optionsFor(round.current,mode):[];}
+function speaker(word){return `<button class="listen" data-speak="${word.id}" aria-label="ฟังเสียง ${esc(word.hanzi)}">◖)) ฟังเสียง</button>`;}
+function progress(current,total,scoreLabel){return `<div class="statusbar"><span>ข้อ <strong>${current}</strong> / ${total}</span><span>${scoreLabel}</span></div><progress aria-label="ความคืบหน้า" max="${total}" value="${current-1}"></progress>`;}
+function renderQuestion(){
+ if(round.done){renderSummary();return;}
+ const w=round.current,done=round.answered;
+ const answer=mode==='meaning'?w.meaning:w.pinyin;
+ let body='';
+ if(mode==='meaning'||mode==='reading') body=`<div class="choices">${options.map((o,i)=>`<button class="choice ${mode==='reading'?'pinyin-choice':''} ${done?(o===answer?'correct':typed===o?'wrong':''):''}" data-choice="${i}" ${done?'disabled':''}><span>${String.fromCharCode(65+i)}</span>${esc(o)}${done&&o===answer?' ✓':''}</button>`).join('')}</div>`;
+ if(mode==='pinyin'||mode==='hanzi')body=`<label class="answer-label" for="answer">${mode==='pinyin'?'คำอ่านของคุณ':'ตัวอักษรจีนของคุณ'}</label><input id="answer" class="answer-input" value="${esc(typed)}" placeholder="${mode==='pinyin'?'พินอินมีเครื่องหมาย หรือเลขโทน':'พิมพ์ด้วยแป้นภาษาจีน'}" autocomplete="off" autocapitalize="off" spellcheck="false" ${done?'disabled':''}><p class="hint">${mode==='pinyin'?'ตัวอย่างรูปแบบ: ni3 หรือ nǐ · ต้องระบุโทน 1–4 ให้ครบ':'ใช้แป้นภาษาจีน พิมพ์พินอินแล้วเลือกตัวอักษรที่ต้องการ'}</p>`;
+ if(mode==='tones')body=`<div>${w.syllables.map((s,i)=>`<div class="tone-row"><div class="syllable"><small>พยางค์ ${i+1}</small>${esc(s.base)}</div><div class="tone-buttons" role="group" aria-label="โทนพยางค์ ${i+1} ${s.base}">${[1,2,3,4,5].map(t=>`<button class="tone-btn ${done?(t===s.tone?'correct':selectedTones[i]===t?'wrong':''):''}" aria-label="${toneNames[t]}" aria-pressed="${selectedTones[i]===t}" data-syllable="${i}" data-tone="${t}" ${done?'disabled':''}><em>${['','¯','╱','∨','╲','·'][t]}</em>${t===5?'เบา':t}</button>`).join('')}</div></div>`).join('')}</div><div class="legend">1 สูงเรียบ · 2 ขึ้น · 3 ต่ำแล้วขึ้น · 4 ลง · เบา = 5</div>`;
+ const feedback=done?`<b>${round.lastCorrect?'✓ ถูกต้อง':'ลองจำคำนี้อีกครั้ง'}</b><br><span lang="zh-CN">${w.hanzi}</span> · ${w.pinyin} · ${w.meaning}${mode==='tones'?'<br>'+w.syllables.map(s=>s.marked+' = '+toneNames[s.tone]).join(' / '):''}`:'เลือกคำตอบได้เลย ไม่มีการจับเวลา';
+ const allowCheck=mode==='tones'?selectedTones.every(t=>t!==null):typed.trim().length>0;
+ $('game').innerHTML=`<div class="card-inner">${progress(round.index+1,round.queue.length,`ถูก <strong>${round.score}</strong> ข้อ`)}<div class="prompt"><p>${config().instruction}</p><div class="${mode==='hanzi'?'meaning-prompt':'hanzi'}" ${mode==='hanzi'?'':'lang="zh-CN"'}>${esc(mode==='hanzi'?w.meaning:w.hanzi)}</div>${mode==='meaning'?`<div class="pinyin">${w.pinyin}</div>`:''}${mode==='hanzi'&&!done?'':speaker(w)}</div>${body}</div><div class="footerbar"><div class="feedback ${done?(round.lastCorrect?'good':'bad'):''}" role="status">${feedback}</div>${done?'<button class="primary" id="next">'+(round.index===round.queue.length-1?'ดูผลคะแนน':'ข้อต่อไป →')+'</button>':(['pinyin','hanzi','tones'].includes(mode)?`<button class="primary" id="check" ${allowCheck?'':'disabled'}>ตรวจคำตอบ</button>`:'')}</div>`;
+ $('under').innerHTML=mode==='tones'?'พินอินด้านบนซ่อนเครื่องหมายโทนไว้ ลองจำโทนก่อนกดฟังเสียงได้ครับ':mode==='reading'?'ตัวเลือกไม่มีพินอินซ้ำ แม้บางคำในบทเรียนจะออกเสียงเหมือนกัน':'ทุกคำจะปรากฏครั้งเดียวต่อรอบ กดเริ่มรอบใหม่เพื่อสุ่มลำดับใหม่';
+ if(done)$('next').focus({preventScroll:true});
+}
+function submit(correct){if(round.submit(correct)){renderQuestion();}}
+function check(){
+ if(!round||round.done||round.answered)return;
+ if(mode==='tones'){if(selectedTones.some(t=>t===null))return;submit(round.current.syllables.every((s,i)=>s.tone===selectedTones[i]));}
+ else if(mode==='pinyin'){if(typed.trim())submit(acceptsPinyin(round.current,typed));}
+ else if(mode==='hanzi'){if(typed.trim())submit(typed.replace(/\s/g,'')===round.current.hanzi);}
+}
+function renderSummary(){
+ const wrong=round.mistakes;
+ $('game').innerHTML=`<div class="card-inner"><div class="summary"><div class="badge">จบรอบ · ${config().name}</div><div class="score">${round.score}<small> / ${round.queue.length}</small></div><h3>${round.score===round.queue.length?'จำได้ครบแล้ว เก่งมาก!':'ฝึกอีกนิด จำได้มากขึ้น'}</h3><p class="sub">${wrong.length?`มี ${wrong.length} คำที่ควรกลับมาทบทวน`:'ลองเปลี่ยนเกมเพื่อทดสอบอีกทักษะ'}</p><div class="summary-actions">${wrong.length?'<button class="primary" id="review">ฝึกเฉพาะคำที่ผิด</button>':''}<button class="smallbtn" id="again">เล่นครบ 25 คำอีกครั้ง</button></div></div>${wrong.length?`<h3>คำที่ตอบผิด</h3><ul class="mistakes">${wrong.map(w=>`<li><div><b lang="zh-CN">${w.hanzi}</b><small>${w.pinyin}</small><div>${w.meaning}</div></div>${speaker(w)}</li>`).join('')}</ul>`:''}</div>`;
+ $('under').textContent='คะแนนนี้นับคำตอบครั้งแรกของแต่ละข้อ';
+}
+function renderFlash(){const w=flashWords[flashIndex];$('game').innerHTML=`<div class="card-inner"><div class="statusbar"><span>บัตร <strong>${flashIndex+1}</strong> / ${flashWords.length}</span><span>ทบทวนแบบไม่เก็บคะแนน</span></div><div class="flash"><div class="hanzi" lang="zh-CN">${w.hanzi}</div>${speaker(w)}<div class="flash-answer">${flipped?`<div class="pinyin">${w.pinyin}</div><div class="meaning-prompt">${w.meaning}</div><div class="hint">${w.syllables.map(s=>`${s.marked} · ${toneNames[s.tone]}`).join(' / ')}</div>`:'<p class="hint">ลองนึกคำอ่านและความหมายก่อนพลิก</p>'}</div></div><div class="flash-nav"><button class="smallbtn" id="flash-prev" ${flashIndex===0?'disabled':''}>← ก่อนหน้า</button><button class="primary" id="flip">${flipped?'ซ่อนคำตอบ':'พลิกดูคำตอบ'}</button><button class="smallbtn" id="flash-next" ${flashIndex===flashWords.length-1?'disabled':''}>ถัดไป →</button></div></div>`;$('under').textContent='บัตรคำใช้พินอินและโทนตามบทเรียน Day 1 เดิม';}
+function startMatchBoard(){
+ matching=new MatchingRound(matchingWords.slice(matchingIndex,matchingIndex+5));
+ leftSelected=null;rightSelected=null;rightOrder=shuffle(matching.words.map((_,i)=>i));matchMessage='เลือกตัวจีนหนึ่งคำ แล้วเลือกความหมายที่ตรงกัน';renderMatching();
+}
+function renderMatching(){
+ if(matchingIndex>=matchingWords.length){renderMatchSummary();return;}
+ const start=matchingIndex+1,end=Math.min(matchingIndex+5,matchingWords.length);
+ $('game').innerHTML=`<div class="card-inner"><div class="statusbar"><span>คำที่ <strong>${start}–${end}</strong> / ${matchingWords.length}</span><span>จับคู่ผิด <strong>${matchingErrors+matching.errors}</strong> ครั้ง</span></div><p class="hint center">${config().instruction}</p><div class="match-grid"><div class="match-col">${matching.words.map((w,i)=>`<button class="match-tile zh ${matching.matched.has(i)?'matched':''}" lang="zh-CN" data-left="${i}" aria-pressed="${leftSelected===i}" ${matching.matched.has(i)?'disabled':''}>${w.hanzi}${matching.matched.has(i)?' ✓':''}</button>`).join('')}</div><div class="match-col">${rightOrder.map(i=>`<button class="match-tile ${matching.matched.has(i)?'matched':''}" data-right="${i}" aria-pressed="${rightSelected===i}" ${matching.matched.has(i)?'disabled':''}>${matching.words[i].meaning}${matching.matched.has(i)?' ✓':''}</button>`).join('')}</div></div></div><div class="footerbar"><div class="feedback" role="status">${esc(matchMessage)}</div>${matching.done?`<button class="primary" id="match-next">${end===matchingWords.length?'ดูผล':'ชุดต่อไป →'}</button>`:''}</div>`;
+ $('under').textContent='จับคู่ครั้งละ 5 คำ จนครบทั้งชุด คำที่จับคู่แล้วจะไม่ถูกนับซ้ำ';
+}
+function matchChoose(side,id){
+ if(matching.matched.has(id))return;
+ if(side==='left')leftSelected=id;else rightSelected=id;
+ if(leftSelected!==null&&rightSelected!==null){
+ const ok=matching.choose(leftSelected,rightSelected);
+ if(ok)matchMessage=`✓ ${matching.words[leftSelected].hanzi} · ${matching.words[leftSelected].pinyin} · ${matching.words[leftSelected].meaning}`;
+ else{matchMessage='ยังไม่ใช่คู่นี้ ลองเลือกใหม่อีกครั้ง';matchMistakes.add(matching.words[leftSelected].id);matchMistakes.add(matching.words[rightSelected].id);}
+ leftSelected=null;rightSelected=null;
+ }
+ renderMatching();
+}
+function renderMatchSummary(){
+ $('game').innerHTML=`<div class="card-inner"><div class="summary"><div class="badge">จับคู่ครบแล้ว</div><div class="score">${matchingWords.length}<small> คู่</small></div><h3>${matchingErrors===0?'จับคู่ถูกทุกครั้ง!':'ทบทวนครบทั้งชุดแล้ว'}</h3><p class="sub">จับคู่ผิด ${matchingErrors} ครั้ง</p><div class="summary-actions">${matchMistakes.size?'<button class="primary" id="match-review">ฝึกคำที่เคยจับคู่ผิด</button>':''}<button class="smallbtn" id="again">เล่นครบ 25 คำอีกครั้ง</button></div></div></div>`;$('under').textContent='เลือกเกมอื่นเพื่อฝึกคำอ่าน การพิมพ์ หรือโทนต่อได้';
+}
+function speak(id){
+ const w=WORDS.find(w=>w.id===id);if(!w)return;
+ if(!('speechSynthesis'in window)){$('audio-note').textContent='เบราว์เซอร์นี้ไม่รองรับเสียงอ่าน ใช้พินอินจากเฉลยหรือบัตรคำได้';return;}
+ const voices=window.speechSynthesis.getVoices();const voice=voices.find(v=>/^zh[-_]CN/i.test(v.lang))||voices.find(v=>/^zh/i.test(v.lang));
+ if(!voice){$('audio-note').textContent='ยังไม่พบเสียงภาษาจีนในอุปกรณ์ กรุณาเปิดใน Chrome หรือ Edge ที่ติดตั้งเสียงภาษาจีน แล้วกดฟังอีกครั้ง เกมส่วนอื่นยังเล่นได้ตามปกติ';return;}
+ cancelSpeech();const utter=new SpeechSynthesisUtterance(w.hanzi);utter.voice=voice;utter.lang=voice.lang;utter.rate=.78;
+ utter.onerror=e=>{if(!['interrupted','canceled'].includes(e.error))$('audio-note').textContent='เล่นเสียงไม่สำเร็จ ลองกดฟังอีกครั้งหรือใช้พินอินจากบัตรคำ';};
+ $('audio-note').textContent='เสียงอ่านจากอุปกรณ์ อาจมีการออกเสียงเบาหรือการเปลี่ยนเสียงต่างจากรูปพินอินในบทเรียน';window.speechSynthesis.speak(utter);
+}
+$('modes').addEventListener('click',e=>{const b=e.target.closest('[data-mode]');if(b)start(b.dataset.mode);});
+$('restart').addEventListener('click',()=>start(mode));
+$('game').addEventListener('input',e=>{if(e.target.id==='answer'){typed=e.target.value;const checkButton=$('check');if(checkButton)checkButton.disabled=!typed.trim();}});
+$('game').addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target.id==='answer'&&!e.isComposing){e.preventDefault();check();}});
+$('game').addEventListener('click',e=>{
+ const b=e.target.closest('button');if(!b||b.disabled)return;
+ if(b.dataset.speak!==undefined){speak(Number(b.dataset.speak));return;}
+ if(b.dataset.choice!==undefined){if(round.answered)return;typed=options[Number(b.dataset.choice)];submit(typed===(mode==='meaning'?round.current.meaning:round.current.pinyin));return;}
+ if(b.dataset.tone!==undefined){selectedTones[Number(b.dataset.syllable)]=Number(b.dataset.tone);renderQuestion();const active=$('game').querySelector(`[data-syllable="${b.dataset.syllable}"][data-tone="${b.dataset.tone}"]`);active?.focus({preventScroll:true});return;}
+ if(b.dataset.left!==undefined){matchChoose('left',Number(b.dataset.left));return;}
+ if(b.dataset.right!==undefined){matchChoose('right',Number(b.dataset.right));return;}
+ if(b.id==='check')check();
+ if(b.id==='next'){round.next();prepareQuestion();renderQuestion();$('main').focus({preventScroll:true});}
+ if(b.id==='again')start(mode);
+ if(b.id==='review')start(mode,[...round.mistakes]);
+ if(b.id==='flip'){flipped=!flipped;renderFlash();$('flip').focus({preventScroll:true});}
+ if(b.id==='flash-prev'||b.id==='flash-next'){cancelSpeech();flashIndex+=b.id==='flash-next'?1:-1;flipped=false;renderFlash();}
+ if(b.id==='match-next'){matchingErrors+=matching.errors;matchingIndex+=matching.words.length;if(matchingIndex>=matchingWords.length)renderMatchSummary();else startMatchBoard();}
+ if(b.id==='match-review')start('matching',WORDS.filter(w=>matchMistakes.has(w.id)));
+});
+start('meaning');
+if('speechSynthesis'in window)window.speechSynthesis.getVoices();
+if(document.modelContext?.registerTool){
+ const lifecycle=new AbortController();
+ window.addEventListener('pagehide',()=>lifecycle.abort(),{once:true});
+ try{Promise.resolve(document.modelContext.registerTool({
+  name:'start_vocabulary_game',title:'เริ่มเกมคำศัพท์ Day 1',
+  description:'Start a new 25-word practice round in the selected mode. Replaces the current round.',
+  inputSchema:{type:'object',properties:{mode:{type:'string',enum:MODES.map(m=>m.id)}},required:['mode'],additionalProperties:false},
+  annotations:{readOnlyHint:false,untrustedContentHint:false},
+  execute(input){if(!input||typeof input!=='object'||Object.keys(input).length!==1||!MODES.some(m=>m.id===input.mode))throw new Error('Invalid game mode');start(input.mode);return {mode,wordCount:25,status:'started'};}
+ },{signal:lifecycle.signal})).catch(()=>{});}catch{}
+}
+</script></body></html>
