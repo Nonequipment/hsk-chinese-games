@@ -1,0 +1,2 @@
+import { getChatGPTUser } from '@/app/chatgpt-auth'; import { getProgressRepository } from '@/app/lib/db/env';
+export async function POST(request:Request){const user=await getChatGPTUser();if(!user)return Response.json({error:'กรุณาเข้าสู่ระบบ'},{status:401});const body=await request.json() as {id:string;setId:string;mode:string;score:number;missedItemIds:string[]};await getProgressRepository().saveGameAttempt({...body,userId:user.userId});return Response.json({ok:true})}
