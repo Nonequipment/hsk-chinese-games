@@ -5,7 +5,7 @@ import { readExecutionProfile } from "./scripts/execution-profile.mjs";
 import { sites } from "./build/sites-vite-plugin";
 
 const SITE_CREATOR_PLACEHOLDER_DATABASE_ID =
-  "00000000-0000-4000-8000-000000000000";
+  "d5e38ca1-e373-4de4-bfa7-5217aa28a637";
 
 const { d1, r2 } = hostingConfig;
 
