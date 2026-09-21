@@ -1,0 +1,5 @@
+.worktrees/
+.superpowers/
+.sites-runtime/
+node_modules/
+dist/
