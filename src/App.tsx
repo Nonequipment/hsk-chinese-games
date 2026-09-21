@@ -1,12 +1,14 @@
 import { useEffect, useState } from 'react';
 import { Link, Navigate, Route, Routes, useParams } from 'react-router-dom';
 import { SignInSheet } from './features/auth/sign-in-sheet';
+import { StrokeOrderDialog } from './features/stroke-order-dialog';
 import { AuthProvider } from './lib/auth/auth-provider';
 import { getSetItems, normalizeSetId, type Curriculum, type VocabularyItem, type VocabularySet } from './lib/curriculum';
 
 function LearningRoute() {
   const { setId } = useParams();
   const [showPinyin, setShowPinyin] = useState(true);
+  const [strokeOpen, setStrokeOpen] = useState(false);
   const [session, setSession] = useState<{ set: VocabularySet; items: VocabularyItem[] } | null>(null);
   const [index, setIndex] = useState(0);
   useEffect(() => {
@@ -27,7 +29,7 @@ function LearningRoute() {
   const speak = () => { if (item && 'speechSynthesis' in window) window.speechSynthesis.speak(new SpeechSynthesisUtterance(item.hanzi)); };
   if (session === null) return <main><h1>กำลังเปิดบทเรียน…</h1><p>กำลังเตรียมคำศัพท์ให้คุณ</p></main>;
   if (!item) return <main><h1>ไม่พบชุดคำศัพท์</h1><p>ลิงก์นี้อาจไม่ถูกต้อง กรุณาเลือกจากคลังคำศัพท์</p><Link to="/library">ไปที่คลังคำศัพท์</Link></main>;
-  return <main className="study-page"><div className="study-heading"><Link to="/library">← คลังคำศัพท์</Link><span>SET {session.set.id.slice(1)} · {session.set.category}</span></div><section className="flashcard"><header><span>คำที่ {index + 1} จาก {session.items.length}</span><button className="sound-button" aria-label="ฟังเสียงคำศัพท์" onClick={speak}>🔊</button></header><div className="card-progress"><i style={{ width: `${((index + 1) / session.items.length) * 100}%` }} /></div><p className="hanzi" lang="zh-CN">{item.hanzi}</p><div className="word-meta">{showPinyin ? <strong>{item.pinyin}</strong> : <em>พินอินถูกซ่อนอยู่</em>}<span>{item.thai}</span></div><div className="flashcard-actions"><button onClick={speak}>🔊 ฟังคำอ่าน</button><button onClick={() => setShowPinyin((visible) => !visible)}>{showPinyin ? '◉ ซ่อนพินอิน' : '◌ แสดงพินอิน'}</button></div><div className="stroke-note"><b>笔</b><span><strong>ลำดับขีด</strong><small>ดูรูปคำศัพท์และฟังคำอ่านเพื่อฝึกเขียน</small></span></div><div className="card-controls"><button aria-label="คำก่อนหน้า" disabled={index === 0} onClick={() => setIndex((current) => current - 1)}>←</button><button className="primary" onClick={remember}>✓ จำคำนี้แล้ว</button><button aria-label="คำถัดไป" disabled={index === session.items.length - 1} onClick={() => setIndex((current) => current + 1)}>→</button></div></section></main>;
+  return <main className="study-page"><div className="study-heading"><Link to="/library">← คลังคำศัพท์</Link><span>SET {session.set.id.slice(1)} · {session.set.category}</span></div><section className="flashcard"><header><span>คำที่ {index + 1} จาก {session.items.length}</span><button className="sound-button" aria-label="ฟังเสียงคำศัพท์" onClick={speak}>🔊</button></header><div className="card-progress"><i style={{ width: `${((index + 1) / session.items.length) * 100}%` }} /></div><p className="hanzi" lang="zh-CN">{item.hanzi}</p><div className="word-meta">{showPinyin ? <strong>{item.pinyin}</strong> : <em>พินอินถูกซ่อนอยู่</em>}<span>{item.thai}</span></div><div className="flashcard-actions"><button onClick={speak}>🔊 ฟังคำอ่าน</button><button onClick={() => setShowPinyin((visible) => !visible)}>{showPinyin ? '◉ ซ่อนพินอิน' : '◌ แสดงพินอิน'}</button></div><button className="stroke-note" onClick={() => setStrokeOpen(true)}><b>笔</b><span><strong>ดูลำดับขีด</strong><small>กดเพื่อดูภาพเคลื่อนไหวทีละขีด</small></span><i>→</i></button><div className="card-controls"><button className="previous" aria-label="คำก่อนหน้า" disabled={index === 0} onClick={() => setIndex((current) => current - 1)}>← ก่อนหน้า</button><button className="next" aria-label="คำถัดไป" disabled={index === session.items.length - 1} onClick={() => setIndex((current) => current + 1)}>ถัดไป →</button><button className="primary" onClick={remember}>✓ จำคำนี้แล้ว</button></div></section><StrokeOrderDialog word={item.hanzi} open={strokeOpen} onClose={() => setStrokeOpen(false)} /></main>;
 }
 
 function HomeRoute() {
