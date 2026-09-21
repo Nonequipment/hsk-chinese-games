@@ -4,13 +4,13 @@ import { getSupabaseClient } from '../supabase/client';
 type AuthApi = {
   getSession: () => Promise<{ data: { session: { user: { id: string; email?: string } } | null } }>;
   onAuthStateChange: (listener: (_event: string, session: { user: { id: string; email?: string } } | null) => void) => { data: { subscription: { unsubscribe: () => void } } };
-  signInWithOtp: (input: { email: string; options: { shouldCreateUser: boolean } }) => Promise<{ error: Error | null }>;
-  verifyOtp: (input: { email: string; token: string; type: 'email' }) => Promise<{ error: Error | null }>;
+  signUp: (input: { email: string; password: string }) => Promise<{ error: Error | null }>;
+  signInWithPassword: (input: { email: string; password: string }) => Promise<{ error: Error | null }>;
   signOut: () => Promise<unknown>;
 };
 
 type AuthClient = { auth: AuthApi } | null;
-type AuthValue = { client: AuthClient; sendOtp: (email: string) => Promise<void>; verifyOtp: (email: string, token: string) => Promise<void> };
+type AuthValue = { client: AuthClient; signUp: (email: string, password: string) => Promise<void>; signIn: (email: string, password: string) => Promise<void> };
 const AuthContext = createContext<AuthValue | null>(null);
 
 export function AuthProvider({ children, client = getSupabaseClient() as AuthClient }: PropsWithChildren<{ client?: AuthClient }>) {
@@ -22,8 +22,8 @@ export function AuthProvider({ children, client = getSupabaseClient() as AuthCli
   }, [client]);
   const value = useMemo<AuthValue>(() => ({
     client,
-    sendOtp: async (email) => { if (!client) throw new Error('การซิงก์ข้ามอุปกรณ์ยังไม่พร้อมใช้งาน'); const { error } = await client.auth.signInWithOtp({ email, options: { shouldCreateUser: true } }); if (error) throw error; },
-    verifyOtp: async (email, token) => { if (!/^\d{6}$/.test(token)) throw new Error('กรอกรหัส 6 หลัก'); if (!client) throw new Error('การซิงก์ข้ามอุปกรณ์ยังไม่พร้อมใช้งาน'); const { error } = await client.auth.verifyOtp({ email, token, type: 'email' }); if (error) throw error; },
+    signUp: async (email, password) => { if (password.length < 8) throw new Error('รหัสผ่านต้องมีอย่างน้อย 8 ตัวอักษร'); if (!client) throw new Error('การซิงก์ข้ามอุปกรณ์ยังไม่พร้อมใช้งาน'); const { error } = await client.auth.signUp({ email, password }); if (error) throw error; },
+    signIn: async (email, password) => { if (!client) throw new Error('การซิงก์ข้ามอุปกรณ์ยังไม่พร้อมใช้งาน'); const { error } = await client.auth.signInWithPassword({ email, password }); if (error) throw error; },
   }), [client, session]);
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
