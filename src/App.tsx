@@ -9,7 +9,8 @@ function LearningRoute() {
   const [showPinyin, setShowPinyin] = useState(true);
   const [item, setItem] = useState<{ hanzi: string; pinyin: string; thai: string } | null>(null);
   useEffect(() => { let active = true; void import('../data/curriculum.json').then(({ default: data }) => { const set = data.sets.find((entry) => entry.id === setId); const first = data.items.find((entry) => entry.id === set?.itemIds[0]); if (active && first) setItem(first); }); return () => { active = false; }; }, [setId]);
-  return <main><h1>เรียน Set {setNumber}</h1><section className="flashcard"><p>{item ? item.hanzi : 'กำลังโหลดคำศัพท์…'}</p>{showPinyin && item && <strong>{item.pinyin}</strong>}{item && <span>{item.thai}</span>}<button onClick={() => setShowPinyin((visible) => !visible)}>{showPinyin ? 'ซ่อนพินอิน' : 'แสดงพินอิน'}</button><button disabled={!item}>จำคำนี้แล้ว</button></section></main>;
+  const remember = () => { const completed = JSON.parse(localStorage.getItem('hsk-mission-studied') ?? '[]') as string[]; localStorage.setItem('hsk-mission-studied', JSON.stringify([...new Set([...completed, setId ?? 'set-01'])])); };
+  return <main><h1>เรียน Set {setNumber}</h1><section className="flashcard"><p>{item ? item.hanzi : 'กำลังโหลดคำศัพท์…'}</p>{showPinyin && item && <strong>{item.pinyin}</strong>}{item && <span>{item.thai}</span>}<button onClick={() => setShowPinyin((visible) => !visible)}>{showPinyin ? 'ซ่อนพินอิน' : 'แสดงพินอิน'}</button><button onClick={remember}>จำคำนี้แล้ว</button></section></main>;
 }
 
 function HomeRoute() {
