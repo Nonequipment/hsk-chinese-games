@@ -1,11 +1,8 @@
 import { render, screen } from '@testing-library/react';
-import { vi } from 'vitest';
-vi.mock('@/app/chatgpt-auth', () => ({ getChatGPTUser: async () => null, chatGPTSignInPath: () => '/signin-with-chatgpt' }));
-import HomePage from '@/app/page';
+import { MemoryRouter } from 'react-router-dom';
+import { App } from '@/src/App';
 
-it('renders the HSK 1200 product shell', async () => {
-  render(await HomePage());
-  expect(screen.getByRole('heading', { name: /HSK 4\.0.*1,200/ })).toBeVisible();
-  expect(screen.getByRole('navigation', { name: 'เมนูหลัก' })).toBeVisible();
-  expect(screen.getByTestId('app-shell')).toHaveAttribute('data-theme', 'modern-chinese-light');
+it('renders the HSK Mission start route', () => {
+  render(<MemoryRouter><App /></MemoryRouter>);
+  expect(screen.getByRole('heading', { name: 'HSK Mission' })).toBeVisible();
 });
