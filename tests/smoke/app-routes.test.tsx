@@ -11,3 +11,8 @@ it('renders a learning route after a direct navigation', () => {
 
   expect(screen.getByRole('heading', { name: /เรียน set 1/i })).toBeVisible();
 });
+
+it('renders the vocabulary library route', async () => {
+  render(<MemoryRouter initialEntries={['/library']}><App /></MemoryRouter>);
+  expect(await screen.findByRole('heading', { name: /คลังคำศัพท์/i })).toBeVisible();
+});
