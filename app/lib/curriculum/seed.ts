@@ -1,0 +1,7 @@
+import type { Curriculum } from './types';
+export async function ensureCurriculumSeeded(db: D1Database, curriculum: Curriculum): Promise<void> {
+  const seeded = await db.prepare('SELECT version FROM curriculum_versions WHERE version=?').bind(curriculum.version).first(); if (seeded) return;
+  for (const set of curriculum.sets) await db.prepare('INSERT INTO vocabulary_sets(id,category,scheduled_date) VALUES(?,?,?) ON CONFLICT(id) DO UPDATE SET category=excluded.category,scheduled_date=excluded.scheduled_date').bind(set.id,set.category,set.scheduledDate).run();
+  for (let offset = 0; offset < curriculum.items.length; offset += 100) await db.batch(curriculum.items.slice(offset, offset + 100).map(item => db.prepare('INSERT INTO vocabulary_items(id,number,set_id,category,hanzi,pinyin,thai) VALUES(?,?,?,?,?,?,?) ON CONFLICT(id) DO UPDATE SET number=excluded.number,set_id=excluded.set_id,category=excluded.category,hanzi=excluded.hanzi,pinyin=excluded.pinyin,thai=excluded.thai').bind(item.id,item.number,item.setId,item.category,item.hanzi,item.pinyin,item.thai)));
+  await db.prepare('INSERT INTO curriculum_versions(version,item_count,set_count,seeded_at) VALUES(?,?,?,?) ON CONFLICT(version) DO UPDATE SET item_count=excluded.item_count,set_count=excluded.set_count,seeded_at=excluded.seeded_at').bind(curriculum.version,curriculum.items.length,curriculum.sets.length,new Date().toISOString()).run();
+}
