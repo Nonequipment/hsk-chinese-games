@@ -1,0 +1,2 @@
+import type { VocabularyItem } from '@/app/lib/curriculum/types';
+export function VocabularyRow({ item }: { item: VocabularyItem }) { return <div className="grid grid-cols-[3rem_1fr_auto] items-center gap-3 rounded-2xl border border-white/10 bg-white/5 p-3"><span className="text-xs text-slate-500">#{item.number}</span><div><p className="text-2xl font-semibold text-white">{item.hanzi}</p><p className="text-sm text-cyan-300">{item.pinyin}</p></div><p className="max-w-32 text-right text-sm text-slate-300">{item.thai}</p></div>; }

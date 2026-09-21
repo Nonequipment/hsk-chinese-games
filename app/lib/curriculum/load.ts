@@ -11,11 +11,12 @@ export function getSet(id: string): VocabularySet | undefined {
 }
 
 export function searchVocabulary(query: string, filters: { setId?: string; category?: string } = {}): VocabularyItem[] {
-  const needle = query.trim().toLocaleLowerCase();
+  const normalize = (value: string) => value.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLocaleLowerCase();
+  const needle = normalize(query.trim());
   return curriculum.items.filter(item => {
     if (filters.setId && item.setId !== filters.setId) return false;
     if (filters.category && item.category !== filters.category) return false;
     if (!needle) return true;
-    return [item.hanzi, item.pinyin, item.thai].some(value => value.toLocaleLowerCase().includes(needle));
+    return [item.hanzi, item.pinyin, item.thai].some(value => normalize(value).includes(needle));
   });
 }
