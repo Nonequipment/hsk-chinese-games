@@ -8,3 +8,8 @@ nav a, nav button { border: 0; background: transparent; color: #102a43; text-dec
 .set-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; }
 .set-card { display: grid; gap: 4px; border: 1px solid #d9e6f5; border-radius: 16px; padding: 16px; background: white; color: #102a43; text-decoration: none; }
 .set-card small { color: #486581; }
+.flashcard { display: grid; gap: 16px; min-height: 420px; place-content: center; text-align: center; border: 1px solid #d9e6f5; border-radius: 28px; background: white; padding: 28px; }
+.flashcard p { margin: 0; font-size: clamp(64px, 22vw, 112px); line-height: 1; }
+.flashcard strong { color: #155eef; font-size: 24px; }
+.flashcard span { font-size: 18px; }
+.flashcard button { min-height: 48px; border: 0; border-radius: 12px; background: #e8f1ff; color: #0b4cc7; font: inherit; font-weight: 700; }

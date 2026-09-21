@@ -10,6 +10,7 @@ it('renders a learning route after a direct navigation', () => {
   );
 
   expect(screen.getByRole('heading', { name: /เรียน set 1/i })).toBeVisible();
+  expect(screen.getByRole('button', { name: /ซ่อนพินอิน/i })).toBeVisible();
 });
 
 it('renders the vocabulary library route', async () => {
