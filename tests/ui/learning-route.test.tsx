@@ -11,6 +11,6 @@ it('shows real vocabulary for a friendly set route and lets the learner hide pin
   expect(screen.getByText('bàba')).toBeVisible();
   expect(screen.getByText('พ่อ')).toBeVisible();
 
-  await user.click(screen.getByRole('button', { name: 'ซ่อนพินอิน' }));
+  await user.click(screen.getByRole('button', { name: /ซ่อนพินอิน/ }));
   expect(screen.queryByText('bàba')).not.toBeInTheDocument();
 });
