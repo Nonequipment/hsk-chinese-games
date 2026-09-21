@@ -1,0 +1,1 @@
+export function SaveStatus({state}:{state:'saved'|'saving'|'offline'|'error'}){const labels={saved:'บันทึกแล้ว',saving:'กำลังบันทึก…',offline:'รอเชื่อมต่ออินเทอร์เน็ต',error:'บันทึกไม่สำเร็จ'};return <output aria-live="polite" className="text-xs text-slate-400">{labels[state]}</output>}
