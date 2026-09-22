@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { getSetItems, type VocabularyItem } from '../lib/curriculum';
+import { canOpenExam, readRemembered } from '../lib/study-progress';
 
 type Stage = 'meaning' | 'hanzi' | 'tones';
 const stages: { id: Stage; label: string }[] = [{ id: 'meaning', label: 'ความหมาย · ไม่มีพินอิน' }, { id: 'hanzi', label: 'พิมพ์ตัวจีน' }, { id: 'tones', label: 'เสียงวรรณยุกต์' }];
@@ -12,6 +13,7 @@ export function ExamRoute() {
   useEffect(() => { let active = true; void import('../../data/curriculum.json').then(({ default: data }) => { if (active) setItems(getSetItems(data, setId)?.items ?? []); }); return () => { active = false; }; }, [setId]);
   const item = items?.[index]; const choices = useMemo(() => item && items ? getChoices(item, items) : [], [item, items]);
   if (!items || !item) return <main><h1>กำลังเตรียมข้อสอบ…</h1></main>;
+  if (!canOpenExam(readRemembered(), items.map((entry) => entry.id))) return <main className="activity-page"><Link className="back-link" to={`/learn/${setId}`}>← กลับไปเรียน</Link><h1>ยังเปิดข้อสอบไม่ได้</h1><p className="activity-subtitle">จำคำศัพท์ในชุดนี้ให้ครบทั้ง 20 คำก่อน จึงจะเริ่มสอบได้</p></main>;
   const reset = () => { setStarted(false); setIndex(0); setInput(''); setResult(null); };
   const answer = (correct: boolean) => { if (!correct) { setResult('failed'); return; } if (index === items.length - 1) { setResult('passed'); return; } setIndex((value) => value + 1); setInput(''); };
   const submit = () => { const expected = stage === 'hanzi' ? item.hanzi : toneDigits(item.pinyin); answer(input.replaceAll(' ', '') === expected); };
