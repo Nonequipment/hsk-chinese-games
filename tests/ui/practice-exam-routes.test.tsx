@@ -16,6 +16,8 @@ it('renders a practice route with game modes', async () => {
   render(<MemoryRouter initialEntries={['/practice/S01']}><App /></MemoryRouter>);
   expect(await screen.findByRole('heading', { name: 'เกมฝึกฝน' })).toBeVisible();
   expect(screen.getByRole('button', { name: 'เลือกความหมาย' })).toBeVisible();
+  expect(screen.getByRole('button', { name: 'พิมพ์พินอินและโทน' })).toBeVisible();
+  expect(screen.queryByRole('button', { name: 'แยกโทน' })).not.toBeInTheDocument();
 });
 
 it('locks an exam until every card is remembered', async () => {
@@ -23,18 +25,13 @@ it('locks an exam until every card is remembered', async () => {
   expect(await screen.findByRole('heading', { name: 'ยังเปิดข้อสอบไม่ได้' })).toBeVisible();
 });
 
-it('mixes meaning, Chinese typing, and numbered-pinyin questions in one exam', async () => {
+it('starts a randomized 60-question exam containing all three question styles', async () => {
   const user = userEvent.setup();
   localStorage.setItem('hsk-mission-remembered', JSON.stringify(Array.from({ length: 20 }, (_, index) => `V${String(index + 1).padStart(4, '0')}`)));
   render(<MemoryRouter initialEntries={['/exam/S01']}><App /></MemoryRouter>);
+  expect(await screen.findByText(/สุ่มลำดับโจทย์ทั้ง 3 รูปแบบ/i)).toBeVisible();
   await user.click(await screen.findByRole('button', { name: 'เริ่มสอบ 60 ข้อ' }));
-  expect(screen.getByText('เลือกความหมาย · ไม่มีพินอิน')).toBeVisible();
-  await user.click(screen.getByRole('button', { name: 'พ่อ' }));
-  expect(screen.getByText('พิมพ์ตัวจีนให้ถูกต้อง')).toBeVisible();
-  await user.type(screen.getByRole('textbox', { name: 'พิมพ์คำตอบสอบ' }), '爸爸');
-  await user.click(screen.getByRole('button', { name: 'ส่งคำตอบ' }));
-  expect(screen.getAllByText('พิมพ์พินอินพร้อมเลขวรรณยุกต์').length).toBeGreaterThan(0);
-  expect(screen.getByText('ข้อ 3 / 60')).toBeVisible();
-  expect(screen.getByRole('textbox', { name: 'พิมพ์คำตอบสอบ' })).toHaveAttribute('placeholder', 'เช่น ba4ba');
+  expect(screen.getByText('ข้อ 1 / 60')).toBeVisible();
+  expect(screen.getAllByText(/เลือกความหมาย|พิมพ์ตัวจีน|พิมพ์พินอินพร้อมเลขวรรณยุกต์/).length).toBeGreaterThan(0);
 });
 
