@@ -1,5 +1,5 @@
 import { afterEach, expect, it, vi } from 'vitest';
-import { speakMandarin } from '../../src/lib/audio';
+import { playCorrectEffect, speakMandarin } from '../../src/lib/audio';
 
 afterEach(() => vi.unstubAllGlobals());
 
@@ -13,4 +13,17 @@ it('speaks Chinese with the Mandarin language selected', () => {
   expect(cancel).toHaveBeenCalledOnce();
   expect(resume).toHaveBeenCalledOnce();
   expect(speak).toHaveBeenCalledWith(expect.objectContaining({ text: '爸爸', lang: 'zh-CN' }));
+});
+
+it('plays a rising audio effect for a correct answer', () => {
+  const oscillator = { type: '', frequency: { setValueAtTime: vi.fn(), exponentialRampToValueAtTime: vi.fn() }, connect: vi.fn().mockReturnThis(), start: vi.fn(), stop: vi.fn(), addEventListener: vi.fn() };
+  const gain = { gain: { setValueAtTime: vi.fn(), exponentialRampToValueAtTime: vi.fn() }, connect: vi.fn().mockReturnValue({}) };
+  class AudioContextMock { currentTime = 0; destination = {}; createOscillator = () => oscillator; createGain = () => gain; close = vi.fn(); }
+  Object.defineProperty(window, 'AudioContext', { configurable: true, value: AudioContextMock });
+
+  playCorrectEffect();
+
+  expect(oscillator.type).toBe('sine');
+  expect(oscillator.frequency.exponentialRampToValueAtTime).toHaveBeenCalled();
+  expect(oscillator.start).toHaveBeenCalledOnce();
 });

@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { getSetItems, type VocabularyItem } from '../lib/curriculum';
-import { playWrongEffect, speakMandarin } from '../lib/audio';
+import { playCorrectEffect, playWrongEffect, speakMandarin } from '../lib/audio';
 
 type Mode = 'meaning' | 'reading' | 'pinyin' | 'hanzi';
 const modes: { id: Mode; label: string }[] = [
@@ -35,7 +35,7 @@ export function PracticeRoute() {
   const item = items?.[index]; const field = mode === 'reading' ? 'pinyin' : 'thai'; const answerChoices = useMemo(() => item && items ? shuffledChoices(item, items, field) : [], [item, items, field]);
   useEffect(() => { if (autoSound && item) speakMandarin(item.hanzi); }, [item?.id, autoSound]);
   if (!items || !item) return <main><h1>กำลังเปิดเกม…</h1></main>;
-  const next = (correct: boolean, answer = '') => { if (feedbackType) return; setSelectedAnswer(answer); setFeedbackType(correct ? 'correct' : 'wrong'); if (correct) { setFeedback('✓ ถูกต้อง'); setScore((value) => value + 1); } else { playWrongEffect(); setFeedback(`✕ ตอบไม่ถูก · คำตอบที่ถูกต้อง: ${mode === 'reading' ? item.pinyin : mode === 'hanzi' ? item.hanzi : item.thai}`); } setTimeout(() => { setIndex((value) => Math.min(value + 1, items.length - 1)); setInput(''); setFeedback(''); setFeedbackType(null); setSelectedAnswer(''); }, correct ? 650 : 1900); };
+  const next = (correct: boolean, answer = '') => { if (feedbackType) return; setSelectedAnswer(answer); setFeedbackType(correct ? 'correct' : 'wrong'); if (correct) { playCorrectEffect(); setFeedback('✓ ถูกต้อง'); setScore((value) => value + 1); } else { playWrongEffect(); setFeedback(`✕ ตอบไม่ถูก · คำตอบที่ถูกต้อง: ${mode === 'reading' ? item.pinyin : mode === 'hanzi' ? item.hanzi : item.thai}`); } setTimeout(() => { setIndex((value) => Math.min(value + 1, items.length - 1)); setInput(''); setFeedback(''); setFeedbackType(null); setSelectedAnswer(''); }, correct ? 650 : 1900); };
   const submit = () => next(mode === 'pinyin' ? answersPinyin(item.pinyin, input) : input.trim() === item.hanzi, input.trim());
   const toggleAutoSound = () => setAutoSound((enabled) => { localStorage.setItem('hsk-mission-auto-sound', enabled ? 'off' : 'on'); return !enabled; });
   const togglePinyin = () => setShowPinyin((visible) => { localStorage.setItem('hsk-mission-game-pinyin', visible ? 'off' : 'on'); return !visible; });

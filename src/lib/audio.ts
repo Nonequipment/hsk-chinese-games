@@ -31,3 +31,25 @@ export function playWrongEffect() {
     // The visual correction remains available if audio is unavailable.
   }
 }
+
+export function playCorrectEffect() {
+  if (typeof window === 'undefined') return;
+  const AudioContextConstructor = window.AudioContext ?? (window as Window & { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
+  if (!AudioContextConstructor) return;
+  try {
+    const context = new AudioContextConstructor();
+    const oscillator = context.createOscillator();
+    const gain = context.createGain();
+    oscillator.type = 'sine';
+    oscillator.frequency.setValueAtTime(520, context.currentTime);
+    oscillator.frequency.exponentialRampToValueAtTime(780, context.currentTime + 0.18);
+    gain.gain.setValueAtTime(0.1, context.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, context.currentTime + 0.25);
+    oscillator.connect(gain).connect(context.destination);
+    oscillator.start();
+    oscillator.stop(context.currentTime + 0.25);
+    oscillator.addEventListener('ended', () => void context.close());
+  } catch {
+    // Visual feedback remains available if the device cannot play effects.
+  }
+}
