@@ -3,12 +3,17 @@ import userEvent from '@testing-library/user-event';
 import { MemoryRouter } from 'react-router-dom';
 import { App } from '../../src/App';
 
-it('shows the self-assessment library with an audible word card and status controls', async () => {
+it('shows Chinese-only self-assessment cards that cycle from known to review', async () => {
+  const user = userEvent.setup();
   render(<MemoryRouter initialEntries={['/self-check']}><App /></MemoryRouter>);
   expect(await screen.findByRole('heading', { name: 'ด่านประเมินตน' })).toBeVisible();
   expect(screen.getByRole('button', { name: 'ปิดเสียงอัตโนมัติ' })).toBeVisible();
-  expect(screen.getByRole('button', { name: 'ทำเครื่องหมายว่าจำได้ 爸爸' })).toBeVisible();
-  expect(screen.getByRole('button', { name: 'ทำเครื่องหมายว่าต้องทบทวน 爸爸' })).toBeVisible();
+  const card = screen.getByRole('button', { name: 'ประเมินคำศัพท์ 爸爸' });
+  expect(screen.queryByText('bàba')).not.toBeInTheDocument();
+  await user.click(card);
+  expect(card).toHaveAttribute('data-status', 'known');
+  await user.click(card);
+  expect(card).toHaveAttribute('data-status', 'review');
 });
 
 it('filters the self-assessment cards by search text', async () => {
