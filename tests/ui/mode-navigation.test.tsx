@@ -7,7 +7,7 @@ beforeEach(() => localStorage.clear());
 
 it('separates learning, games and exams in the primary navigation', () => {
   render(<MemoryRouter><App /></MemoryRouter>);
-  expect(screen.getByRole('link', { name: '▣ เรียน' })).toHaveAttribute('href', '/learn/S01');
+  expect(screen.getByRole('link', { name: '▣ เรียน' })).toHaveAttribute('href', '/library');
   expect(screen.getByRole('link', { name: '⚡ เกม' })).toHaveAttribute('href', '/games');
   expect(screen.getByRole('link', { name: '✦ สอบ' })).toHaveAttribute('href', '/exams');
 });
