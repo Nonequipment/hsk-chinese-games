@@ -18,10 +18,11 @@ it('stores a completed card locally', async () => {
   const user = userEvent.setup();
   render(<MemoryRouter initialEntries={['/learn/set-01']}><App /></MemoryRouter>);
   await user.click(await screen.findByRole('button', { name: /จำคำนี้แล้ว/ }));
-  expect(localStorage.getItem('hsk-mission-studied')).toContain('S01');
+  expect(localStorage.getItem('hsk-mission-remembered')).toContain('V0001');
 });
 
 it('renders the vocabulary library route', async () => {
   render(<MemoryRouter initialEntries={['/library']}><App /></MemoryRouter>);
   expect(await screen.findByRole('heading', { name: /คลังคำศัพท์/i })).toBeVisible();
 });
+

@@ -4,13 +4,16 @@ import { SignInSheet } from './features/auth/sign-in-sheet';
 import { StrokeOrderInline } from './features/stroke-order-inline';
 import { PracticeRoute } from './features/practice-route';
 import { ExamRoute } from './features/exam-route';
+import { ModeHub } from './features/mode-hub';
 import { speakMandarin } from './lib/audio';
+import { canOpenExam, markItemRemembered, readRemembered } from './lib/study-progress';
 import { AuthProvider } from './lib/auth/auth-provider';
 import { getSetItems, normalizeSetId, type Curriculum, type VocabularyItem, type VocabularySet } from './lib/curriculum';
 
 function LearningRoute() {
   const { setId } = useParams();
   const [showPinyin, setShowPinyin] = useState(true);
+  const [autoSound, setAutoSound] = useState(() => localStorage.getItem('hsk-mission-auto-sound') !== 'off');
   const [session, setSession] = useState<{ set: VocabularySet; items: VocabularyItem[] } | null>(null);
   const [index, setIndex] = useState(0);
   useEffect(() => {
@@ -24,17 +27,17 @@ function LearningRoute() {
   }, [setId]);
   const item = session?.items[index];
   const move = (direction: number) => setIndex((current) => Math.max(0, Math.min((session?.items.length ?? 1) - 1, current + direction)));
-  const remember = () => {
-    const canonical = normalizeSetId(setId) ?? setId ?? 'S01';
-    const completed = JSON.parse(localStorage.getItem('hsk-mission-studied') ?? '[]') as string[];
-    localStorage.setItem('hsk-mission-studied', JSON.stringify([...new Set([...completed, canonical])]));
-    move(1);
-  };
+  const remember = () => { if (!item || !session) return; const remembered = markItemRemembered(readRemembered(), item.id); localStorage.setItem('hsk-mission-remembered', JSON.stringify(remembered)); if (canOpenExam(remembered, session.items.map((entry) => entry.id))) { const completed = JSON.parse(localStorage.getItem('hsk-mission-studied') ?? '[]') as string[]; localStorage.setItem('hsk-mission-studied', JSON.stringify([...new Set([...completed, session.set.id])])); } move(1); };
   const forget = () => move(1);
   const speak = () => { if (item) speakMandarin(item.hanzi); };
+  useEffect(() => { if (autoSound && item) speakMandarin(item.hanzi); }, [item?.id, autoSound]);
+  const toggleAutoSound = () => setAutoSound((enabled) => { localStorage.setItem('hsk-mission-auto-sound', enabled ? 'off' : 'on'); return !enabled; });
   if (session === null) return <main><h1>กำลังเปิดบทเรียน…</h1><p>กำลังเตรียมคำศัพท์ให้คุณ</p></main>;
   if (!item) return <main><h1>ไม่พบชุดคำศัพท์</h1><p>ลิงก์นี้อาจไม่ถูกต้อง กรุณาเลือกจากคลังคำศัพท์</p><Link to="/library">ไปที่คลังคำศัพท์</Link></main>;
-  return <main className="study-page"><div className="study-heading"><Link to="/library">← คลังคำศัพท์</Link><span>SET {session.set.id.slice(1)} · {session.set.category}</span></div><section className="flashcard"><header><span>คำที่ {index + 1} จาก {session.items.length}</span><button className="sound-button" aria-label="ฟังเสียงคำศัพท์" onClick={speak}>🔊</button></header><div className="card-progress"><i style={{ width: `${((index + 1) / session.items.length) * 100}%` }} /></div><p className="hanzi" lang="zh-CN">{item.hanzi}</p><div className="word-meta">{showPinyin ? <strong>{item.pinyin}</strong> : <em>พินอินถูกซ่อนอยู่</em>}<span>{item.thai}</span></div><div className="flashcard-actions"><button onClick={speak}>🔊 ฟังคำอ่าน</button><button onClick={() => setShowPinyin((visible) => !visible)}>{showPinyin ? '◉ ซ่อนพินอิน' : '◌ แสดงพินอิน'}</button></div><StrokeOrderInline word={item.hanzi} /><div className="card-controls"><button className="previous" aria-label="คำก่อนหน้า" disabled={index === 0} onClick={() => move(-1)}><b>←</b><span>ก่อนหน้า</span></button><button className="next" aria-label="คำถัดไป" disabled={index === session.items.length - 1} onClick={() => move(1)}><span>ถัดไป</span><b>→</b></button><button className="forgot" aria-label="จำไม่ได้" onClick={forget}>↺ จำไม่ได้</button><button className="primary" aria-label="จำคำนี้แล้ว" onClick={remember}>✓ จำได้แล้ว</button></div><div className="study-links"><Link to={`/practice/${session.set.id}`} aria-label="เล่นเกมฝึกฝน">⚡ เล่นเกมฝึกฝน</Link><Link to={`/exam/${session.set.id}`} aria-label="สอบชุดนี้">✦ สอบชุดนี้</Link></div></section></main>;
+  const previousSet = session.set.number > 1 ? `S${String(session.set.number - 1).padStart(2, '0')}` : null;
+  const completedSets = JSON.parse(localStorage.getItem('hsk-mission-studied') ?? '[]') as string[];
+  if (previousSet && !completedSets.includes(previousSet)) return <main className="activity-page"><h1>ชุดนี้ยังล็อกอยู่</h1><p>เรียนและจำคำศัพท์ชุดก่อนหน้าให้ครบ 20 คำก่อน</p><Link className="back-link" to={`/learn/${previousSet}`}>ไปเรียน Set ก่อนหน้า</Link></main>;
+  return <main className="study-page"><div className="study-heading"><Link to="/library">← คลังคำศัพท์</Link><span>SET {session.set.id.slice(1)} · {session.set.category}</span></div><section className="flashcard"><header><span>คำที่ {index + 1} จาก {session.items.length}</span><button className="sound-button" aria-label="ฟังเสียงคำศัพท์" onClick={speak}>🔊</button></header><div className="card-progress"><i style={{ width: `${((index + 1) / session.items.length) * 100}%` }} /></div><p className="hanzi" lang="zh-CN">{item.hanzi}</p><div className="word-meta">{showPinyin ? <strong>{item.pinyin}</strong> : <em>พินอินถูกซ่อนอยู่</em>}<span>{item.thai}</span></div><div className="flashcard-actions card-settings"><button aria-label={autoSound ? 'ปิดเสียงอัตโนมัติ' : 'เปิดเสียงอัตโนมัติ'} onClick={toggleAutoSound}>{autoSound ? '🔊 เสียงอัตโนมัติ' : '🔇 ปิดเสียงอัตโนมัติ'}</button><button aria-label={showPinyin ? 'ซ่อนพินอิน' : 'แสดงพินอิน'} onClick={() => setShowPinyin((visible) => !visible)}>{showPinyin ? '◉ ซ่อนพินอิน' : '◌ แสดงพินอิน'}</button></div><StrokeOrderInline word={item.hanzi} /><div className="card-controls"><button className="previous" aria-label="คำก่อนหน้า" disabled={index === 0} onClick={() => move(-1)}><b>←</b><span>ก่อนหน้า</span></button><button className="next" aria-label="คำถัดไป" disabled={index === session.items.length - 1} onClick={() => move(1)}><span>ถัดไป</span><b>→</b></button><button className="forgot" aria-label="จำไม่ได้" onClick={forget}>↺ จำไม่ได้</button><button className="primary" aria-label="จำคำนี้แล้ว" onClick={remember}>✓ จำได้แล้ว</button></div></section></main>;
 }
 
 function HomeRoute() {
@@ -60,11 +63,13 @@ export function App() {
       <Route path="/" element={<HomeRoute />} />
       <Route path="/learn/:setId" element={<LearningRoute />} />
       <Route path="/library" element={<LibraryRoute />} />
+      <Route path="/games" element={<ModeHub kind="games" />} />
+      <Route path="/exams" element={<ModeHub kind="exams" />} />
       <Route path="/practice/:setId" element={<PracticeRoute />} />
       <Route path="/exam/:setId" element={<ExamRoute />} />
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
-    <nav aria-label="เมนูหลัก"><Link to="/"><b>◈</b>ภารกิจ</Link><Link to="/learn/S01"><b>▣</b>เรียน</Link><Link to="/library"><b>⌕</b>คลังคำศัพท์</Link><button><b>◉</b>ฉัน</button></nav>
+    <nav aria-label="เมนูหลัก"><Link to="/"><b>◈</b>ภารกิจ</Link><Link to="/learn/S01"><b>▣</b>เรียน</Link><Link to="/games"><b>⚡</b>เกม</Link><Link to="/exams"><b>✦</b>สอบ</Link></nav>
   </div></AuthProvider>;
 }
 
