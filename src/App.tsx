@@ -2,6 +2,9 @@ import { useEffect, useState } from 'react';
 import { Link, Navigate, Route, Routes, useParams } from 'react-router-dom';
 import { SignInSheet } from './features/auth/sign-in-sheet';
 import { StrokeOrderInline } from './features/stroke-order-inline';
+import { PracticeRoute } from './features/practice-route';
+import { ExamRoute } from './features/exam-route';
+import { speakMandarin } from './lib/audio';
 import { AuthProvider } from './lib/auth/auth-provider';
 import { getSetItems, normalizeSetId, type Curriculum, type VocabularyItem, type VocabularySet } from './lib/curriculum';
 
@@ -28,10 +31,10 @@ function LearningRoute() {
     move(1);
   };
   const forget = () => move(1);
-  const speak = () => { if (item && 'speechSynthesis' in window) window.speechSynthesis.speak(new SpeechSynthesisUtterance(item.hanzi)); };
+  const speak = () => { if (item) speakMandarin(item.hanzi); };
   if (session === null) return <main><h1>กำลังเปิดบทเรียน…</h1><p>กำลังเตรียมคำศัพท์ให้คุณ</p></main>;
   if (!item) return <main><h1>ไม่พบชุดคำศัพท์</h1><p>ลิงก์นี้อาจไม่ถูกต้อง กรุณาเลือกจากคลังคำศัพท์</p><Link to="/library">ไปที่คลังคำศัพท์</Link></main>;
-  return <main className="study-page"><div className="study-heading"><Link to="/library">← คลังคำศัพท์</Link><span>SET {session.set.id.slice(1)} · {session.set.category}</span></div><section className="flashcard"><header><span>คำที่ {index + 1} จาก {session.items.length}</span><button className="sound-button" aria-label="ฟังเสียงคำศัพท์" onClick={speak}>🔊</button></header><div className="card-progress"><i style={{ width: `${((index + 1) / session.items.length) * 100}%` }} /></div><p className="hanzi" lang="zh-CN">{item.hanzi}</p><div className="word-meta">{showPinyin ? <strong>{item.pinyin}</strong> : <em>พินอินถูกซ่อนอยู่</em>}<span>{item.thai}</span></div><div className="flashcard-actions"><button onClick={speak}>🔊 ฟังคำอ่าน</button><button onClick={() => setShowPinyin((visible) => !visible)}>{showPinyin ? '◉ ซ่อนพินอิน' : '◌ แสดงพินอิน'}</button></div><StrokeOrderInline word={item.hanzi} /><div className="card-controls"><button className="previous" aria-label="คำก่อนหน้า" disabled={index === 0} onClick={() => move(-1)}><b>←</b><span>ก่อนหน้า</span></button><button className="next" aria-label="คำถัดไป" disabled={index === session.items.length - 1} onClick={() => move(1)}><span>ถัดไป</span><b>→</b></button><button className="forgot" aria-label="จำไม่ได้" onClick={forget}>↺ จำไม่ได้</button><button className="primary" aria-label="จำคำนี้แล้ว" onClick={remember}>✓ จำได้แล้ว</button></div></section></main>;
+  return <main className="study-page"><div className="study-heading"><Link to="/library">← คลังคำศัพท์</Link><span>SET {session.set.id.slice(1)} · {session.set.category}</span></div><section className="flashcard"><header><span>คำที่ {index + 1} จาก {session.items.length}</span><button className="sound-button" aria-label="ฟังเสียงคำศัพท์" onClick={speak}>🔊</button></header><div className="card-progress"><i style={{ width: `${((index + 1) / session.items.length) * 100}%` }} /></div><p className="hanzi" lang="zh-CN">{item.hanzi}</p><div className="word-meta">{showPinyin ? <strong>{item.pinyin}</strong> : <em>พินอินถูกซ่อนอยู่</em>}<span>{item.thai}</span></div><div className="flashcard-actions"><button onClick={speak}>🔊 ฟังคำอ่าน</button><button onClick={() => setShowPinyin((visible) => !visible)}>{showPinyin ? '◉ ซ่อนพินอิน' : '◌ แสดงพินอิน'}</button></div><StrokeOrderInline word={item.hanzi} /><div className="card-controls"><button className="previous" aria-label="คำก่อนหน้า" disabled={index === 0} onClick={() => move(-1)}><b>←</b><span>ก่อนหน้า</span></button><button className="next" aria-label="คำถัดไป" disabled={index === session.items.length - 1} onClick={() => move(1)}><span>ถัดไป</span><b>→</b></button><button className="forgot" aria-label="จำไม่ได้" onClick={forget}>↺ จำไม่ได้</button><button className="primary" aria-label="จำคำนี้แล้ว" onClick={remember}>✓ จำได้แล้ว</button></div><div className="study-links"><Link to={`/practice/${session.set.id}`} aria-label="เล่นเกมฝึกฝน">⚡ เล่นเกมฝึกฝน</Link><Link to={`/exam/${session.set.id}`} aria-label="สอบชุดนี้">✦ สอบชุดนี้</Link></div></section></main>;
 }
 
 function HomeRoute() {
@@ -57,8 +60,12 @@ export function App() {
       <Route path="/" element={<HomeRoute />} />
       <Route path="/learn/:setId" element={<LearningRoute />} />
       <Route path="/library" element={<LibraryRoute />} />
+      <Route path="/practice/:setId" element={<PracticeRoute />} />
+      <Route path="/exam/:setId" element={<ExamRoute />} />
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
     <nav aria-label="เมนูหลัก"><Link to="/"><b>◈</b>ภารกิจ</Link><Link to="/learn/S01"><b>▣</b>เรียน</Link><Link to="/library"><b>⌕</b>คลังคำศัพท์</Link><button><b>◉</b>ฉัน</button></nav>
   </div></AuthProvider>;
 }
+
+

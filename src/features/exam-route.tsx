@@ -1,0 +1,19 @@
+import { useEffect, useMemo, useState } from 'react';
+import { Link, useParams } from 'react-router-dom';
+import { getSetItems, type VocabularyItem } from '../lib/curriculum';
+
+type Stage = 'meaning' | 'hanzi' | 'tones';
+const stages: { id: Stage; label: string }[] = [{ id: 'meaning', label: 'ความหมาย · ไม่มีพินอิน' }, { id: 'hanzi', label: 'พิมพ์ตัวจีน' }, { id: 'tones', label: 'เสียงวรรณยุกต์' }];
+function toneDigits(pinyin: string) { return [...pinyin].map((letter) => 'āēīōūǖ'.includes(letter) ? '1' : 'áéíóúǘ'.includes(letter) ? '2' : 'ǎěǐǒǔǚ'.includes(letter) ? '3' : 'àèìòùǜ'.includes(letter) ? '4' : '').join(''); }
+function getChoices(item: VocabularyItem, items: VocabularyItem[]) { return [item.thai, ...items.filter((entry) => entry.id !== item.id).slice(0, 3).map((entry) => entry.thai)]; }
+
+export function ExamRoute() {
+  const { setId } = useParams(); const [items, setItems] = useState<VocabularyItem[] | null>(null); const [stage, setStage] = useState<Stage>('meaning'); const [started, setStarted] = useState(false); const [index, setIndex] = useState(0); const [input, setInput] = useState(''); const [result, setResult] = useState<'passed' | 'failed' | null>(null);
+  useEffect(() => { let active = true; void import('../../data/curriculum.json').then(({ default: data }) => { if (active) setItems(getSetItems(data, setId)?.items ?? []); }); return () => { active = false; }; }, [setId]);
+  const item = items?.[index]; const choices = useMemo(() => item && items ? getChoices(item, items) : [], [item, items]);
+  if (!items || !item) return <main><h1>กำลังเตรียมข้อสอบ…</h1></main>;
+  const reset = () => { setStarted(false); setIndex(0); setInput(''); setResult(null); };
+  const answer = (correct: boolean) => { if (!correct) { setResult('failed'); return; } if (index === items.length - 1) { setResult('passed'); return; } setIndex((value) => value + 1); setInput(''); };
+  const submit = () => { const expected = stage === 'hanzi' ? item.hanzi : toneDigits(item.pinyin); answer(input.replaceAll(' ', '') === expected); };
+  return <main className="activity-page"><Link className="back-link" to={`/learn/${setId}`}>← กลับไปเรียน</Link><p className="eyebrow">MASTERY EXAM</p><h1>สอบชุดคำศัพท์</h1><p className="activity-subtitle">20 ข้อ ต้องถูก 100% จึงผ่านในแต่ละโหมด</p><div className="mode-tabs exam-tabs">{stages.map((entry) => <button key={entry.id} className={stage === entry.id ? 'selected' : ''} onClick={() => { setStage(entry.id); reset(); }}>{entry.label}</button>)}</div>{!started ? <section className="exam-intro"><h2>{stages.find((entry) => entry.id === stage)?.label}</h2><p>ไม่มีพินอินระหว่างสอบ หากตอบผิด ระบบจะให้เริ่มใหม่เพื่อรักษาเกณฑ์ 100%</p><button onClick={() => setStarted(true)}>เริ่มสอบ 20 ข้อ</button></section> : result ? <section className={`exam-intro ${result}`}><h2>{result === 'passed' ? '✓ ผ่าน 100%' : 'ยังไม่ผ่าน'}</h2><p>{result === 'passed' ? 'เก่งมาก คุณผ่านโหมดนี้แล้ว' : 'ต้องตอบถูกทุกข้อ ลองเริ่มใหม่อีกครั้ง'}</p><button onClick={reset}>{result === 'passed' ? 'เลือกโหมดถัดไป' : 'เริ่มใหม่'}</button></section> : <section className="game-card"><header><span>ข้อ {index + 1} / 20</span><b>เป้าหมาย 100%</b></header><p className="game-prompt">{stage === 'meaning' ? item.hanzi : item.thai}</p>{stage === 'meaning' ? <div className="game-choices">{choices.map((choice) => <button key={choice} onClick={() => answer(choice === item.thai)}>{choice}</button>)}</div> : <form onSubmit={(event) => { event.preventDefault(); submit(); }}><label>{stage === 'hanzi' ? 'พิมพ์ตัวจีนให้ถูกต้อง' : 'พิมพ์เลขโทนของทุกพยางค์'}</label><input aria-label="พิมพ์คำตอบสอบ" autoCapitalize="none" value={input} onChange={(event) => setInput(event.target.value)} placeholder={stage === 'hanzi' ? 'พิมพ์ตัวจีน' : `เช่น ${toneDigits(item.pinyin)}`} /><button>ส่งคำตอบ</button></form>}</section>}</main>;
+}
