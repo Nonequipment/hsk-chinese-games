@@ -13,8 +13,10 @@ it('creates an account with an email and password', async () => {
   };
   const user = userEvent.setup();
   render(<AuthProvider client={{ auth } as never}><SignInSheet open /></AuthProvider>);
+  expect(screen.getByRole('heading', { name: 'กลับมาเรียนกันต่อ' })).toBeVisible();
+  expect(screen.getByText('เข้าสู่ระบบเพื่อบันทึกความก้าวหน้าของคุณ')).toBeVisible();
   await user.type(screen.getByLabelText(/อีเมล/i), 'learner@example.com');
   await user.type(screen.getByLabelText(/รหัสผ่าน/i), 'securepass8');
-  await user.click(screen.getByRole('button', { name: /สมัครสมาชิก/i }));
+  await user.click(screen.getByRole('button', { name: /สร้างบัญชีใหม่ฟรี/i }));
   expect(auth.signUp).toHaveBeenCalledWith({ email: 'learner@example.com', password: 'securepass8' });
 });
