@@ -35,6 +35,8 @@ nav a, nav button { border: 0; background: transparent; color: #102a43; text-dec
 .assessment-word{display:grid!important;place-items:center;min-height:150px;padding:12px;border:1px solid #d8e5f6!important;border-radius:18px;background:#fff;color:#102f56;font-family:'Noto Sans SC';font-size:clamp(2.8rem,13vw,4.4rem);font-weight:600;box-shadow:0 8px 20px #1559a20b}.assessment-word.known{border-color:#9cdbb4!important;background:#e6f8ed!important;color:#167544}.assessment-word.review{border-color:#ffc8a2!important;background:#fff0e5!important;color:#c14d2e}.assessment-word b{font:inherit}
 .hero-hanzi{pointer-events:none}
 
+.assessment-detail{display:grid;gap:2px;text-align:center;font-family:inherit}.assessment-detail small:first-child{color:#3a79df;font-size:.72rem;font-weight:800}.assessment-detail small:last-child{color:#486582;font-size:.71rem}
+
 /* Assessment reset */
 .assessment-actions .assessment-clear{border-color:#ffd0b2;color:#c65a20;background:#fff9f4}
 

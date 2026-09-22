@@ -47,5 +47,8 @@ export function SelfAssessment() {
 }
 
 function AssessmentCards({ items, statuses, onPlay, onAdvance }: { items: VocabularyItem[]; statuses: Record<string, ReviewStatus>; onPlay: (item: VocabularyItem) => void; onAdvance: (item: VocabularyItem) => void }) {
-  return <section className="assessment-grid" aria-label="รายการคำศัพท์ประเมินตน">{items.map((item) => <button key={item.id} className={`assessment-word ${statuses[item.id] ?? ''}`} lang="zh-CN" aria-label={`ประเมินคำศัพท์ ${item.hanzi}`} data-status={statuses[item.id] ?? 'pending'} onClick={() => { onPlay(item); onAdvance(item); }}><b>{item.hanzi}</b></button>)}</section>;
+  return <section className="assessment-grid" aria-label="รายการคำศัพท์ประเมินตน">{items.map((item) => {
+    const status = statuses[item.id];
+    return <button key={item.id} className={`assessment-word ${status ?? ''}`} lang="zh-CN" aria-label={`ประเมินคำศัพท์ ${item.hanzi}`} data-status={status ?? 'pending'} onClick={() => { onPlay(item); onAdvance(item); }}><b>{item.hanzi}</b>{status && <span className="assessment-detail"><small>{item.pinyin}</small><small>{item.thai}</small></span>}</button>;
+  })}</section>;
 }

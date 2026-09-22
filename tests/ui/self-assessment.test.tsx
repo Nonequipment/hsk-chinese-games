@@ -1,7 +1,10 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MemoryRouter } from 'react-router-dom';
+import { beforeEach } from 'vitest';
 import { App } from '../../src/App';
+
+beforeEach(() => localStorage.clear());
 
 it('shows Chinese-only self-assessment cards that cycle from known to review', async () => {
   const user = userEvent.setup();
@@ -12,6 +15,8 @@ it('shows Chinese-only self-assessment cards that cycle from known to review', a
   expect(screen.queryByText('bàba')).not.toBeInTheDocument();
   await user.click(card);
   expect(card).toHaveAttribute('data-status', 'known');
+  expect(card).toHaveTextContent('bàba');
+  expect(card).toHaveTextContent('พ่อ');
   await user.click(card);
   expect(card).toHaveAttribute('data-status', 'review');
 });
@@ -33,5 +38,7 @@ it('clears the assessment results for the selected set to start again', async ()
   expect(card).toHaveAttribute('data-status', 'known');
   await user.click(screen.getByRole('button', { name: 'ล้างผลชุดนี้' }));
   expect(card).toHaveAttribute('data-status', 'pending');
+  expect(card).not.toHaveTextContent('bàba');
+  expect(card).not.toHaveTextContent('พ่อ');
   expect(screen.getByText('0 จำได้')).toBeVisible();
 });
