@@ -21,6 +21,9 @@ it('lets a learner select multiple sets for a game', async () => {
   await user.selectOptions(screen.getByRole('combobox', { name: 'เพิ่มเซ็ตในเกม' }), 'S02');
   await user.click(screen.getByRole('button', { name: 'เพิ่ม SET 02' }));
   expect(screen.getByRole('link', { name: /เริ่มเล่น 2 เซ็ตที่เลือก/ })).toHaveAttribute('href', '/practice/S01+S02');
+  await user.click(screen.getByRole('button', { name: 'ลบ S01' }));
+  await user.click(screen.getByRole('button', { name: 'ลบ S02' }));
+  expect(screen.getByRole('button', { name: 'เลือกอย่างน้อย 1 เซ็ตเพื่อเริ่มเกม' })).toBeDisabled();
 });
 
 it('loads all words from combined sets into one game', async () => {
