@@ -5,6 +5,7 @@ import { StrokeOrderInline } from './features/stroke-order-inline';
 import { PracticeRoute } from './features/practice-route';
 import { ExamRoute } from './features/exam-route';
 import { ModeHub } from './features/mode-hub';
+import { SelfAssessment } from './features/self-assessment';
 import { speakMandarin } from './lib/audio';
 import { canOpenExam, markItemRemembered, readRemembered } from './lib/study-progress';
 import { AuthProvider } from './lib/auth/auth-provider';
@@ -65,11 +66,12 @@ export function App() {
       <Route path="/library" element={<LibraryRoute />} />
       <Route path="/games" element={<ModeHub kind="games" />} />
       <Route path="/exams" element={<ModeHub kind="exams" />} />
+      <Route path="/self-check" element={<SelfAssessment />} />
       <Route path="/practice/:setId" element={<PracticeRoute />} />
       <Route path="/exam/:setId" element={<ExamRoute />} />
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
-    <nav aria-label="เมนูหลัก"><Link to="/"><b>◈</b>ภารกิจ</Link><Link to="/learn/S01"><b>▣</b>เรียน</Link><Link to="/games"><b>⚡</b>เกม</Link><Link to="/exams"><b>✦</b>สอบ</Link></nav>
+    <nav aria-label="เมนูหลัก"><Link to="/"><b>◈</b>ภารกิจ</Link><Link to="/learn/S01"><b>▣</b>เรียน</Link><Link to="/games"><b>⚡</b>เกม</Link><Link to="/exams"><b>✦</b>สอบ</Link><Link to="/self-check"><b>◎</b>ประเมิน</Link></nav>
   </div></AuthProvider>;
 }
 

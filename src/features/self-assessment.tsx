@@ -1,0 +1,44 @@
+import { useEffect, useMemo, useState } from 'react';
+import { speakMandarin } from '../lib/audio';
+import type { Curriculum, VocabularyItem } from '../lib/curriculum';
+
+type ReviewStatus = 'known' | 'review';
+const storageKey = 'hsk-mission-self-assessment';
+
+function readStatuses(): Record<string, ReviewStatus> {
+  try { return JSON.parse(localStorage.getItem(storageKey) ?? '{}') as Record<string, ReviewStatus>; } catch { return {}; }
+}
+
+export function SelfAssessment() {
+  const [data, setData] = useState<Curriculum | null>(null);
+  const [setId, setSetId] = useState('S01');
+  const [query, setQuery] = useState('');
+  const [randomized, setRandomized] = useState(false);
+  const [autoSound, setAutoSound] = useState(() => localStorage.getItem('hsk-mission-auto-sound') !== 'off');
+  const [statuses, setStatuses] = useState<Record<string, ReviewStatus>>(readStatuses);
+
+  useEffect(() => { void import('../../data/curriculum.json').then(({ default: loaded }) => setData(loaded)); }, []);
+  const items = useMemo(() => {
+    if (!data) return [];
+    const needle = query.trim().toLowerCase();
+    const filtered = data.items.filter((item) => (setId === 'all' || item.setId === setId) && (!needle || `${item.hanzi} ${item.pinyin} ${item.thai}`.toLowerCase().includes(needle)));
+    return randomized ? [...filtered].sort(() => Math.random() - 0.5) : filtered;
+  }, [data, setId, query, randomized]);
+  const known = items.filter((item) => statuses[item.id] === 'known').length;
+  const review = items.filter((item) => statuses[item.id] === 'review').length;
+  const toggleAutoSound = () => setAutoSound((on) => { localStorage.setItem('hsk-mission-auto-sound', on ? 'off' : 'on'); return !on; });
+  const setStatus = (item: VocabularyItem, status: ReviewStatus) => setStatuses((current) => {
+    const next = { ...current, [item.id]: status };
+    localStorage.setItem(storageKey, JSON.stringify(next));
+    return next;
+  });
+  const play = (item: VocabularyItem) => { if (autoSound) speakMandarin(item.hanzi); };
+
+  if (!data) return <main><h1>กำลังเปิดด่านประเมิน…</h1></main>;
+  const percentage = items.length ? Math.round((known / items.length) * 100) : 0;
+  return <main className="self-assessment"><p className="eyebrow">SELF CHECK</p><h1>ด่านประเมินตน</h1><p>แตะคำศัพท์เพื่อฟังเสียง แล้วเลือกว่าจำได้หรือต้องทบทวน</p><section className="assessment-filter"><label>ค้นหาในคลังคำศัพท์<input type="search" role="searchbox" aria-label="ค้นหาคำศัพท์" placeholder="จีน, พินอิน, ไทย หรืออังกฤษ" value={query} onChange={(event) => setQuery(event.target.value)} /></label><label>เลือกเซ็ต<select value={setId} onChange={(event) => setSetId(event.target.value)}><option value="all">ทุกเซ็ต · 1,200 คำ</option>{data.sets.map((set) => <option key={set.id} value={set.id}>{set.id} · {set.category}</option>)}</select></label><button className="auto-sound-toggle" aria-label={autoSound ? 'ปิดเสียงอัตโนมัติ' : 'เปิดเสียงอัตโนมัติ'} onClick={toggleAutoSound}>{autoSound ? '🔊 เสียงอัตโนมัติ' : '🔇 ปิดเสียงอัตโนมัติ'}</button></section><section className="assessment-summary"><div className="assessment-ring"><b>{percentage}%</b></div><div><strong>{known} จำได้</strong><i style={{ width: `${percentage}%` }} /><p><span>● จำได้ {known}</span><span>● ต้องทบทวน {review}</span><span>● รอเช็ก {Math.max(0, items.length - known - review)}</span></p></div><small>จาก {items.length} คำ</small></section><div className="assessment-actions"><button onClick={() => setRandomized(false)}>เรียงปกติ</button><button onClick={() => setRandomized((value) => !value)}>สุ่มคำ</button></div><AssessmentCards items={items} statuses={statuses} onPlay={play} onStatus={setStatus} /></main>;
+}
+
+function AssessmentCards({ items, statuses, onPlay, onStatus }: { items: VocabularyItem[]; statuses: Record<string, ReviewStatus>; onPlay: (item: VocabularyItem) => void; onStatus: (item: VocabularyItem, status: ReviewStatus) => void }) {
+  return <section className="assessment-grid" aria-label="รายการคำศัพท์ประเมินตน">{items.map((item) => <article key={item.id} className={`assessment-word ${statuses[item.id] ?? ''}`}><button className="assessment-hanzi" lang="zh-CN" aria-label={`ฟังคำศัพท์ ${item.hanzi}`} onClick={() => onPlay(item)}>{item.hanzi}</button><small>{item.pinyin} · {item.thai}</small><div><button aria-label={`ทำเครื่องหมายว่าจำได้ ${item.hanzi}`} className="known" onClick={() => onStatus(item, 'known')}>จำได้</button><button aria-label={`ทำเครื่องหมายว่าต้องทบทวน ${item.hanzi}`} className="review" onClick={() => onStatus(item, 'review')}>ทบทวน</button></div></article>)}</section>;
+}
