@@ -13,6 +13,12 @@ type AuthClient = { auth: AuthApi } | null;
 type AuthValue = { client: AuthClient; signUp: (email: string, password: string) => Promise<void>; signIn: (email: string, password: string) => Promise<void> };
 const AuthContext = createContext<AuthValue | null>(null);
 
+function usernameEmail(username: string) {
+  const normalized = username.trim().toLowerCase();
+  if (!/^[a-z0-9][a-z0-9._-]{2,29}$/.test(normalized)) throw new Error('ชื่อผู้ใช้ใช้ตัวอักษรอังกฤษ ตัวเลข . _ หรือ - และยาว 3–30 ตัว');
+  return `${normalized}@hsk.local`;
+}
+
 export function AuthProvider({ children, client = getSupabaseClient() as AuthClient }: PropsWithChildren<{ client?: AuthClient }>) {
   const [session, setSession] = useState<{ user: { id: string; email?: string } } | null>(null);
   useEffect(() => {
@@ -22,8 +28,8 @@ export function AuthProvider({ children, client = getSupabaseClient() as AuthCli
   }, [client]);
   const value = useMemo<AuthValue>(() => ({
     client,
-    signUp: async (email, password) => { if (password.length < 8) throw new Error('รหัสผ่านต้องมีอย่างน้อย 8 ตัวอักษร'); if (!client) throw new Error('การซิงก์ข้ามอุปกรณ์ยังไม่พร้อมใช้งาน'); const { error } = await client.auth.signUp({ email, password }); if (error) throw error; },
-    signIn: async (email, password) => { if (!client) throw new Error('การซิงก์ข้ามอุปกรณ์ยังไม่พร้อมใช้งาน'); const { error } = await client.auth.signInWithPassword({ email, password }); if (error) throw error; },
+    signUp: async (username, password) => { if (password.length < 8) throw new Error('รหัสผ่านต้องมีอย่างน้อย 8 ตัวอักษร'); if (!client) throw new Error('การซิงก์ข้ามอุปกรณ์ยังไม่พร้อมใช้งาน'); const { error } = await client.auth.signUp({ email: usernameEmail(username), password }); if (error) throw error; },
+    signIn: async (username, password) => { if (!client) throw new Error('การซิงก์ข้ามอุปกรณ์ยังไม่พร้อมใช้งาน'); const { error } = await client.auth.signInWithPassword({ email: usernameEmail(username), password }); if (error) throw error; },
   }), [client, session]);
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
