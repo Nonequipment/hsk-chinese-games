@@ -18,6 +18,8 @@ it('renders a practice route with game modes', async () => {
   expect(screen.getByRole('button', { name: 'เลือกความหมาย' })).toBeVisible();
   expect(screen.getByRole('button', { name: 'พิมพ์พินอินและโทน' })).toBeVisible();
   expect(screen.queryByRole('button', { name: 'แยกโทน' })).not.toBeInTheDocument();
+  expect(screen.getByRole('button', { name: 'ปิดเสียงอัตโนมัติ' })).toBeVisible();
+  expect(screen.getByRole('button', { name: 'ซ่อนพินอิน' })).toBeVisible();
 });
 
 it('locks an exam until every card is remembered', async () => {
