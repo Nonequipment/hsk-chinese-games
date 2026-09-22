@@ -3,19 +3,39 @@ import { Link, useParams } from 'react-router-dom';
 import { getSetItems, type VocabularyItem } from '../lib/curriculum';
 import { canOpenExam, readRemembered } from '../lib/study-progress';
 
-type Stage = 'meaning' | 'hanzi' | 'tones';
-const stages: { id: Stage; label: string }[] = [{ id: 'meaning', label: 'ความหมาย · ไม่มีพินอิน' }, { id: 'hanzi', label: 'พิมพ์ตัวจีน' }, { id: 'tones', label: 'เสียงวรรณยุกต์' }];
-function toneDigits(pinyin: string) { return [...pinyin].map((letter) => 'āēīōūǖ'.includes(letter) ? '1' : 'áéíóúǘ'.includes(letter) ? '2' : 'ǎěǐǒǔǚ'.includes(letter) ? '3' : 'àèìòùǜ'.includes(letter) ? '4' : '').join(''); }
-function getChoices(item: VocabularyItem, items: VocabularyItem[]) { return [item.thai, ...items.filter((entry) => entry.id !== item.id).slice(0, 3).map((entry) => entry.thai)]; }
+type QuestionType = 'meaning' | 'hanzi' | 'tones';
+const questionTypes: QuestionType[] = ['meaning', 'hanzi', 'tones'];
+const labels: Record<QuestionType, string> = { meaning: 'เลือกความหมาย · ไม่มีพินอิน', hanzi: 'พิมพ์ตัวจีน', tones: 'พิมพ์พินอินพร้อมเลขวรรณยุกต์' };
+const marked: Record<string, [string, string]> = { ā: ['a', '1'], á: ['a', '2'], ǎ: ['a', '3'], à: ['a', '4'], ē: ['e', '1'], é: ['e', '2'], ě: ['e', '3'], è: ['e', '4'], ī: ['i', '1'], í: ['i', '2'], ǐ: ['i', '3'], ì: ['i', '4'], ō: ['o', '1'], ó: ['o', '2'], ǒ: ['o', '3'], ò: ['o', '4'], ū: ['u', '1'], ú: ['u', '2'], ǔ: ['u', '3'], ù: ['u', '4'], ǖ: ['ü', '1'], ǘ: ['ü', '2'], ǚ: ['ü', '3'], ǜ: ['ü', '4'] };
+
+function numberedPinyin(pinyin: string) { return [...pinyin.toLowerCase()].map((letter) => marked[letter] ? marked[letter].join('') : letter).join('').replaceAll(' ', ''); }
+function answersPinyin(pinyin: string, answer: string) {
+  const expected = [...pinyin.toLowerCase()].reduce((value, letter) => marked[letter] ? { base: value.base + marked[letter][0], tones: value.tones + marked[letter][1] } : /[a-zü]/.test(letter) ? { ...value, base: value.base + letter } : value, { base: '', tones: '' });
+  const supplied = answer.toLowerCase().replaceAll(' ', '').replaceAll('ü', 'v');
+  return supplied.replace(/[1-5]/g, '').replaceAll('v', 'ü') === expected.base && supplied.replace(/[^1-4]/g, '') === expected.tones;
+}
+function getChoices(item: VocabularyItem, items: VocabularyItem[], index: number) {
+  const alternatives = items.filter((entry) => entry.id !== item.id && entry.thai !== item.thai);
+  const choices = [item.thai];
+  for (let offset = 0; choices.length < 4 && offset < alternatives.length; offset += 1) choices.push(alternatives[(index * 7 + offset) % alternatives.length].thai);
+  return choices.map((_, position) => choices[(position + index) % choices.length]);
+}
 
 export function ExamRoute() {
-  const { setId } = useParams(); const [items, setItems] = useState<VocabularyItem[] | null>(null); const [stage, setStage] = useState<Stage>('meaning'); const [started, setStarted] = useState(false); const [index, setIndex] = useState(0); const [input, setInput] = useState(''); const [result, setResult] = useState<'passed' | 'failed' | null>(null);
+  const { setId } = useParams();
+  const [items, setItems] = useState<VocabularyItem[] | null>(null);
+  const [started, setStarted] = useState(false);
+  const [index, setIndex] = useState(0);
+  const [input, setInput] = useState('');
+  const [result, setResult] = useState<'passed' | 'failed' | null>(null);
   useEffect(() => { let active = true; void import('../../data/curriculum.json').then(({ default: data }) => { if (active) setItems(getSetItems(data, setId)?.items ?? []); }); return () => { active = false; }; }, [setId]);
-  const item = items?.[index]; const choices = useMemo(() => item && items ? getChoices(item, items) : [], [item, items]);
+  const item = items?.[index];
+  const type = questionTypes[index % questionTypes.length];
+  const choices = useMemo(() => item && items ? getChoices(item, items, index) : [], [item, items, index]);
   if (!items || !item) return <main><h1>กำลังเตรียมข้อสอบ…</h1></main>;
   if (!canOpenExam(readRemembered(), items.map((entry) => entry.id))) return <main className="activity-page"><Link className="back-link" to={`/learn/${setId}`}>← กลับไปเรียน</Link><h1>ยังเปิดข้อสอบไม่ได้</h1><p className="activity-subtitle">จำคำศัพท์ในชุดนี้ให้ครบทั้ง 20 คำก่อน จึงจะเริ่มสอบได้</p></main>;
   const reset = () => { setStarted(false); setIndex(0); setInput(''); setResult(null); };
   const answer = (correct: boolean) => { if (!correct) { setResult('failed'); return; } if (index === items.length - 1) { setResult('passed'); return; } setIndex((value) => value + 1); setInput(''); };
-  const submit = () => { const expected = stage === 'hanzi' ? item.hanzi : toneDigits(item.pinyin); answer(input.replaceAll(' ', '') === expected); };
-  return <main className="activity-page"><Link className="back-link" to={`/learn/${setId}`}>← กลับไปเรียน</Link><p className="eyebrow">MASTERY EXAM</p><h1>สอบชุดคำศัพท์</h1><p className="activity-subtitle">20 ข้อ ต้องถูก 100% จึงผ่านในแต่ละโหมด</p><div className="mode-tabs exam-tabs">{stages.map((entry) => <button key={entry.id} className={stage === entry.id ? 'selected' : ''} onClick={() => { setStage(entry.id); reset(); }}>{entry.label}</button>)}</div>{!started ? <section className="exam-intro"><h2>{stages.find((entry) => entry.id === stage)?.label}</h2><p>ไม่มีพินอินระหว่างสอบ หากตอบผิด ระบบจะให้เริ่มใหม่เพื่อรักษาเกณฑ์ 100%</p><button onClick={() => setStarted(true)}>เริ่มสอบ 20 ข้อ</button></section> : result ? <section className={`exam-intro ${result}`}><h2>{result === 'passed' ? '✓ ผ่าน 100%' : 'ยังไม่ผ่าน'}</h2><p>{result === 'passed' ? 'เก่งมาก คุณผ่านโหมดนี้แล้ว' : 'ต้องตอบถูกทุกข้อ ลองเริ่มใหม่อีกครั้ง'}</p><button onClick={reset}>{result === 'passed' ? 'เลือกโหมดถัดไป' : 'เริ่มใหม่'}</button></section> : <section className="game-card"><header><span>ข้อ {index + 1} / 20</span><b>เป้าหมาย 100%</b></header><p className="game-prompt">{stage === 'meaning' ? item.hanzi : item.thai}</p>{stage === 'meaning' ? <div className="game-choices">{choices.map((choice) => <button key={choice} onClick={() => answer(choice === item.thai)}>{choice}</button>)}</div> : <form onSubmit={(event) => { event.preventDefault(); submit(); }}><label>{stage === 'hanzi' ? 'พิมพ์ตัวจีนให้ถูกต้อง' : 'พิมพ์เลขโทนของทุกพยางค์'}</label><input aria-label="พิมพ์คำตอบสอบ" autoCapitalize="none" value={input} onChange={(event) => setInput(event.target.value)} placeholder={stage === 'hanzi' ? 'พิมพ์ตัวจีน' : `เช่น ${toneDigits(item.pinyin)}`} /><button>ส่งคำตอบ</button></form>}</section>}</main>;
+  const submit = () => answer(type === 'hanzi' ? input.trim() === item.hanzi : answersPinyin(item.pinyin, input));
+  return <main className="activity-page"><Link className="back-link" to={`/learn/${setId}`}>← กลับไปเรียน</Link><p className="eyebrow">MASTERY EXAM</p><h1>สอบชุดคำศัพท์</h1><p className="activity-subtitle">20 ข้อสลับ 3 รูปแบบ ต้องถูก 100% หากตอบผิดให้เริ่มสอบใหม่</p>{!started ? <section className="exam-intro"><h2>ข้อสอบรวม 3 โหมด</h2><p>เลือกความหมายโดยไม่มีพินอิน · พิมพ์ตัวจีน · พิมพ์พินอินพร้อมเลขวรรณยุกต์ เช่น ba4ba</p><button onClick={() => setStarted(true)}>เริ่มสอบ 20 ข้อ</button></section> : result ? <section className={`exam-intro ${result}`}><h2>{result === 'passed' ? '✓ ผ่าน 100%' : 'ตอบผิด — เริ่มใหม่'}</h2><p>{result === 'passed' ? 'คุณผ่านครบทั้งสามรูปแบบแล้ว' : 'เพื่อผ่านด่านนี้ ต้องตอบถูกครบ 20 ข้อติดต่อกัน'}</p><button onClick={reset}>{result === 'passed' ? 'กลับไปเลือกชุด' : 'เริ่มสอบใหม่'}</button></section> : <section className="game-card"><header><span>ข้อ {index + 1} / {items.length}</span><b>เป้าหมาย 100%</b></header><p className="exam-question-type">{labels[type]}</p><p className="game-prompt">{type === 'meaning' ? item.hanzi : item.thai}</p>{type === 'meaning' ? <div className="game-choices">{choices.map((choice, choiceIndex) => <button key={`${choice}-${choiceIndex}`} onClick={() => answer(choice === item.thai)}>{choice}</button>)}</div> : <form onSubmit={(event) => { event.preventDefault(); submit(); }}><label>{type === 'hanzi' ? 'พิมพ์ตัวจีนให้ถูกต้อง' : 'พิมพ์พินอินพร้อมเลขวรรณยุกต์'}</label><input aria-label="พิมพ์คำตอบสอบ" autoCapitalize="none" value={input} onChange={(event) => setInput(event.target.value)} placeholder={type === 'hanzi' ? 'พิมพ์ตัวจีน' : `เช่น ${numberedPinyin(item.pinyin)}`} /><button>ส่งคำตอบ</button></form>}</section>}</main>;
 }
