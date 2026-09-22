@@ -14,4 +14,12 @@ describe('curriculum route helpers', () => {
     expect(result?.items[0].hanzi).toBe('爸爸');
     expect(result?.items).toHaveLength(20);
   });
+
+  it('keeps verified readings for words with easily confused tones', () => {
+    const reading = (hanzi: string) => curriculum.items.find((item) => item.hanzi === hanzi)?.pinyin;
+    expect(reading('别人')).toBe('biérén');
+    expect(reading('长')).toBe('cháng');
+    expect(reading('干')).toBe('gān');
+    expect(reading('还')).toBe('hái');
+  });
 });
