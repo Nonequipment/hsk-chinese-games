@@ -24,3 +24,14 @@ it('filters the self-assessment cards by search text', async () => {
   expect(screen.getByText('爸爸')).toBeVisible();
   expect(screen.queryByText('医生')).not.toBeInTheDocument();
 });
+
+it('clears the assessment results for the selected set to start again', async () => {
+  const user = userEvent.setup();
+  render(<MemoryRouter initialEntries={['/self-check']}><App /></MemoryRouter>);
+  const card = await screen.findByRole('button', { name: 'ประเมินคำศัพท์ 爸爸' });
+  await user.click(card);
+  expect(card).toHaveAttribute('data-status', 'known');
+  await user.click(screen.getByRole('button', { name: 'ล้างผลชุดนี้' }));
+  expect(card).toHaveAttribute('data-status', 'pending');
+  expect(screen.getByText('0 จำได้')).toBeVisible();
+});
