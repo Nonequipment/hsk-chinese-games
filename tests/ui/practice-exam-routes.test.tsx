@@ -34,6 +34,7 @@ it('starts a randomized 60-question exam containing all three question styles', 
   render(<MemoryRouter initialEntries={['/exam/S01']}><App /></MemoryRouter>);
   expect(await screen.findByText(/สุ่มลำดับโจทย์ทั้ง 3 รูปแบบ/i)).toBeVisible();
   expect(screen.getByText(/ตอบผิดจะแสดงเฉลยก่อนเริ่มใหม่/i)).toBeVisible();
+  expect(screen.getByText(/คำตอบจะไม่แสดงก่อนตอบ/i)).toBeVisible();
   await user.click(await screen.findByRole('button', { name: 'เริ่มสอบ 60 ข้อ' }));
   expect(screen.getByText('ข้อ 1 / 60')).toBeVisible();
   expect(screen.getAllByText(/เลือกความหมาย|พิมพ์ตัวจีน|พิมพ์พินอินพร้อมเลขวรรณยุกต์/).length).toBeGreaterThan(0);
