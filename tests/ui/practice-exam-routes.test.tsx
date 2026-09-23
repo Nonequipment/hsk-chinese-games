@@ -31,6 +31,13 @@ it('locks an exam until every card is remembered', async () => {
   expect(await screen.findByRole('heading', { name: 'ยังเปิดข้อสอบไม่ได้' })).toBeVisible();
 });
 
+it('shows a passed stamp for a set that has cleared its exam', async () => {
+  localStorage.setItem('hsk-mission-exam-passed-sets', JSON.stringify(['S01']));
+  render(<MemoryRouter initialEntries={['/exams']}><App /></MemoryRouter>);
+  expect(await screen.findByText('ผ่านแล้ว')).toBeVisible();
+  expect(screen.getByText('✓ สอบผ่าน 100%')).toBeVisible();
+});
+
 it('starts a randomized 60-question exam containing all three question styles', async () => {
   const user = userEvent.setup();
   localStorage.setItem('hsk-mission-remembered', JSON.stringify(Array.from({ length: 20 }, (_, index) => `V${String(index + 1).padStart(4, '0')}`)));
