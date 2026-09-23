@@ -17,6 +17,6 @@ it('replaces sign-in with the signed-in profile name', async () => {
   render(<MemoryRouter><App /></MemoryRouter>);
   expect(screen.getByRole('heading', { name: /เรียนจีนทุกวัน/i })).toBeVisible();
   expect(screen.getByRole('navigation', { name: 'เมนูหลัก' })).toBeVisible();
-  expect(await screen.findByRole('button', { name: 'โปรไฟล์ china_lover' })).toBeVisible();
+  expect(await screen.findByRole('link', { name: 'โปรไฟล์ china_lover' })).toHaveAttribute('href', '/profile');
   expect(screen.queryByRole('button', { name: 'เข้าสู่ระบบ' })).not.toBeInTheDocument();
 });

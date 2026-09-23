@@ -1,5 +1,6 @@
 import { createContext, useContext, useEffect, useMemo, useState, type PropsWithChildren } from 'react';
 import { getSupabaseClient } from '../supabase/client';
+import { loadRemoteProgress, savePassedSet, saveRememberedWord } from '../progress-sync';
 
 type AuthApi = {
   getSession: () => Promise<{ data: { session: { user: { id: string; email?: string } } | null } }>;
@@ -9,8 +10,8 @@ type AuthApi = {
   signOut: () => Promise<unknown>;
 };
 
-type AuthClient = { auth: AuthApi } | null;
-type AuthValue = { client: AuthClient; username: string | null; signUp: (email: string, password: string) => Promise<void>; signIn: (email: string, password: string) => Promise<void> };
+type AuthClient = { auth: AuthApi; from?: (table: string) => any } | null;
+type AuthValue = { client: AuthClient; username: string | null; userId: string | null; progress: { remembered: string[]; passedSets: string[] }; signUp: (email: string, password: string) => Promise<void>; signIn: (email: string, password: string) => Promise<void>; rememberWord: (input: { wordId: string; setId: string; studiedCount: number; totalWords: number }) => void; passSet: (input: { setId: string; totalWords: number }) => void };
 const AuthContext = createContext<AuthValue | null>(null);
 
 function usernameEmail(username: string) {
@@ -26,17 +27,33 @@ function sessionUsername(session: { user: { email?: string } } | null) {
 
 export function AuthProvider({ children, client = getSupabaseClient() as AuthClient }: PropsWithChildren<{ client?: AuthClient }>) {
   const [session, setSession] = useState<{ user: { id: string; email?: string } } | null>(null);
+  const [progress, setProgress] = useState({ remembered: [] as string[], passedSets: [] as string[] });
   useEffect(() => {
     if (!client) return;
     void client.auth.getSession().then(({ data }) => setSession(data.session));
     return client.auth.onAuthStateChange((_event, next) => setSession(next)).data.subscription.unsubscribe;
   }, [client]);
+  useEffect(() => {
+    if (!client?.from || !session) { setProgress({ remembered: [], passedSets: [] }); return; }
+    let active = true;
+    void loadRemoteProgress(client as Required<AuthClient>, session.user.id).then((remote) => {
+      if (!active) return;
+      localStorage.setItem('hsk-mission-remembered', JSON.stringify(remote.remembered));
+      localStorage.setItem('hsk-mission-exam-passed-sets', JSON.stringify(remote.passedSets));
+      setProgress(remote);
+    }).catch(() => { if (active) setProgress({ remembered: [], passedSets: [] }); });
+    return () => { active = false; };
+  }, [client, session?.user.id]);
   const value = useMemo<AuthValue>(() => ({
     client,
     username: sessionUsername(session),
+    userId: session?.user.id ?? null,
+    progress,
     signUp: async (username, password) => { if (password.length < 8) throw new Error('รหัสผ่านต้องมีอย่างน้อย 8 ตัวอักษร'); if (!client) throw new Error('การซิงก์ข้ามอุปกรณ์ยังไม่พร้อมใช้งาน'); const { error } = await client.auth.signUp({ email: usernameEmail(username), password }); if (error) throw error; },
     signIn: async (username, password) => { if (!client) throw new Error('การซิงก์ข้ามอุปกรณ์ยังไม่พร้อมใช้งาน'); const { error } = await client.auth.signInWithPassword({ email: usernameEmail(username), password }); if (error) throw error; },
-  }), [client, session]);
+    rememberWord: (input) => { if (!client?.from || !session) return; setProgress((current) => ({ ...current, remembered: [...new Set([...current.remembered, input.wordId]) ] })); void saveRememberedWord(client as Required<AuthClient>, { userId: session.user.id, ...input }).catch(() => undefined); },
+    passSet: (input) => { if (!client?.from || !session) return; setProgress((current) => ({ ...current, passedSets: [...new Set([...current.passedSets, input.setId]) ] })); void savePassedSet(client as Required<AuthClient>, { userId: session.user.id, ...input }).catch(() => undefined); },
+  }), [client, session, progress]);
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
 

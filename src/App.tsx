@@ -17,6 +17,7 @@ function LearningRoute() {
   const [autoSound, setAutoSound] = useState(() => localStorage.getItem('hsk-mission-auto-sound') !== 'off');
   const [session, setSession] = useState<{ set: VocabularySet; items: VocabularyItem[] } | null>(null);
   const [index, setIndex] = useState(0);
+  const { rememberWord } = useAuth();
   useEffect(() => {
     let active = true;
     setIndex(0);
@@ -28,7 +29,7 @@ function LearningRoute() {
   }, [setId]);
   const item = session?.items[index];
   const move = (direction: number) => setIndex((current) => Math.max(0, Math.min((session?.items.length ?? 1) - 1, current + direction)));
-  const remember = () => { if (!item) return; const remembered = markItemRemembered(readRemembered(), item.id); localStorage.setItem('hsk-mission-remembered', JSON.stringify(remembered)); move(1); };
+  const remember = () => { if (!item || !session) return; const remembered = markItemRemembered(readRemembered(), item.id); localStorage.setItem('hsk-mission-remembered', JSON.stringify(remembered)); rememberWord({ wordId: item.id, setId: session.set.id, studiedCount: remembered.filter((id) => session.items.some((entry) => entry.id === id)).length, totalWords: session.items.length }); move(1); };
   const forget = () => move(1);
   const speak = () => { if (item) speakMandarin(item.hanzi); };
   useEffect(() => { if (autoSound && item) speakMandarin(item.hanzi); }, [item?.id, autoSound]);
@@ -46,7 +47,7 @@ function HomeRoute() {
   const { username } = useAuth();
   const completed = new Set<string>(readCompletedSets()).size;
   const plan = getDailySetPlan({ completedSets: completed, totalSets: 60, targetDate: '2026-10-17' });
-  return <main className="dashboard"><section className="mission-card"><div className="brand"><b>学</b><span>HSK MISSION</span><small>เป้าหมาย 17 ต.ค.</small></div><p className="eyebrow">ADAPTIVE MISSION CONTROL</p><h1>เรียนจีนทุกวัน<br /><i>ไปให้ถึง HSK 4.0</i></h1><p>1,200 คำ · 60 เซ็ต · เรียนสั้น กระชับ และจำได้จริง</p><div className="hero-actions"><Link to="/library">เลือกชุดเรียน →</Link>{username ? <button className="profile-button" aria-label={`โปรไฟล์ ${username}`}>◉ {username}</button> : <button onClick={() => setSignInOpen(true)}>เข้าสู่ระบบ</button>}</div><em className="hero-hanzi">汉</em></section><section className="stats"><div><b>{completed}</b><span>เซ็ตที่สอบผ่าน</span></div><div><b>{completed * 20}</b><span>คำที่จำได้แล้ว</span></div><div><b>{plan.remainingSets}</b><span>เซ็ตที่เหลือ</span></div></section><div className="section-title"><span><p className="eyebrow">STUDY CALENDAR</p><h2>แผนของคุณ</h2></span><b>เหลือ {plan.remainingDays} วัน</b></div><section className="plan-calendar" aria-label="ปฏิทินแผนการเรียน"><div><small>วันเป้าหมาย</small><strong>17 ต.ค. 2026</strong></div><div><small>เหลือเวลา</small><strong>{plan.remainingDays} วัน</strong></div><div><small>ต้องทำทุกวัน</small><strong>{plan.setsPerDay} เซ็ต</strong><span>{plan.wordsPerDay} คำ</span></div></section><section className="today-card"><i>⚡</i><span><strong>วันนี้เรียน {plan.setsPerDay} เซ็ต · {plan.wordsPerDay} คำ</strong><p>เหลือ {plan.remainingSets} เซ็ต เพื่อทันเป้าหมาย 17 ต.ค.</p><small>ต้องสอบผ่าน 100% จึงนับเป็นคำที่จำได้และความคืบหน้า</small></span><Link to="/library" aria-label="เลือกชุดเรียนตามแผน">→</Link></section><section className="steps"><div><b>01</b><span><strong>เรียนบัตรคำ</strong><small>เรียนคำศัพท์ในคลังให้ครบ 20 คำ</small></span></div><div><b>02</b><span><strong>พร้อมสอบ</strong><small>เมื่อจำครบจึงเปิดข้อสอบของเซ็ตนั้นได้</small></span></div><div><b>03</b><span><strong>สอบผ่าน 100%</strong><small>ผ่านแล้วจึงเก็บเป็นคำที่จำได้ในแผน</small></span></div></section><SignInSheet open={signInOpen} onClose={() => setSignInOpen(false)} /></main>;
+  return <main className="dashboard"><section className="mission-card"><div className="brand"><b>学</b><span>HSK MISSION</span><small>เป้าหมาย 17 ต.ค.</small></div><p className="eyebrow">ADAPTIVE MISSION CONTROL</p><h1>เรียนจีนทุกวัน<br /><i>ไปให้ถึง HSK 4.0</i></h1><p>1,200 คำ · 60 เซ็ต · เรียนสั้น กระชับ และจำได้จริง</p><div className="hero-actions"><Link to="/library">เลือกชุดเรียน →</Link>{username ? <Link className="profile-button" aria-label={`โปรไฟล์ ${username}`} to="/profile">◉ {username}</Link> : <button onClick={() => setSignInOpen(true)}>เข้าสู่ระบบ</button>}</div><em className="hero-hanzi">汉</em></section><section className="stats"><div><b>{completed}</b><span>เซ็ตที่สอบผ่าน</span></div><div><b>{completed * 20}</b><span>คำที่จำได้แล้ว</span></div><div><b>{plan.remainingSets}</b><span>เซ็ตที่เหลือ</span></div></section><div className="section-title"><span><p className="eyebrow">STUDY CALENDAR</p><h2>แผนของคุณ</h2></span><b>เหลือ {plan.remainingDays} วัน</b></div><section className="plan-calendar" aria-label="ปฏิทินแผนการเรียน"><div><small>วันเป้าหมาย</small><strong>17 ต.ค. 2026</strong></div><div><small>เหลือเวลา</small><strong>{plan.remainingDays} วัน</strong></div><div><small>ต้องทำทุกวัน</small><strong>{plan.setsPerDay} เซ็ต</strong><span>{plan.wordsPerDay} คำ</span></div></section><section className="today-card"><i>⚡</i><span><strong>วันนี้เรียน {plan.setsPerDay} เซ็ต · {plan.wordsPerDay} คำ</strong><p>เหลือ {plan.remainingSets} เซ็ต เพื่อทันเป้าหมาย 17 ต.ค.</p><small>ต้องสอบผ่าน 100% จึงนับเป็นคำที่จำได้และความคืบหน้า</small></span><Link to="/library" aria-label="เลือกชุดเรียนตามแผน">→</Link></section><section className="steps"><div><b>01</b><span><strong>เรียนบัตรคำ</strong><small>เรียนคำศัพท์ในคลังให้ครบ 20 คำ</small></span></div><div><b>02</b><span><strong>พร้อมสอบ</strong><small>เมื่อจำครบจึงเปิดข้อสอบของเซ็ตนั้นได้</small></span></div><div><b>03</b><span><strong>สอบผ่าน 100%</strong><small>ผ่านแล้วจึงเก็บเป็นคำที่จำได้ในแผน</small></span></div></section><SignInSheet open={signInOpen} onClose={() => setSignInOpen(false)} /></main>;
 }
 
 function LibraryRoute() {
@@ -60,6 +61,18 @@ function LibraryRoute() {
   return <main className="library-page"><header><p className="eyebrow">VOCABULARY VAULT</p><h1>คลังคำศัพท์</h1><p>HSK 4.0 · 1,200 คำ แบ่งเป็น 60 เซ็ต</p><label className="search">⌕<input aria-label="ค้นหาคำศัพท์" value={query} onChange={(event) => setQuery(event.target.value)} placeholder="ค้นหาจีน · พินอิน · ไทย" /></label></header>{q && <section className="search-results"><p>พบ {matches.length} คำสำหรับ “{query}”</p><div>{matches.slice(0, 12).map((item) => <Link to={`/learn/${item.setId}`} key={item.id}><b lang="zh-CN">{item.hanzi}</b><span>{item.pinyin}</span><small>{item.thai}</small></Link>)}</div></section>}<div className="library-count"><b>{sets.length} เซ็ต</b><span>{done.size * 20} / 1,200 คำที่จำได้แล้ว</span></div><div className="set-grid">{sets.map((set) => { const passed = done.has(set.id); const learned = canOpenExam(remembered, set.itemIds); return <Link key={set.id} to={`/learn/${set.id}`} className={`set-card ${passed ? 'done' : learned ? 'ready-for-exam' : ''}`}><header><b>SET {set.id.slice(1)}</b>{passed ? <small>✓ สอบผ่าน</small> : learned ? <small className="ready-label">เรียนไปแล้ว · พร้อมสอบ</small> : <small className="pending-label">ยังไม่ได้เรียน</small>}</header><strong>{set.category}</strong><footer><span>{set.itemIds.length} คำ</span><span>{passed ? 'จำได้แล้ว ✓' : learned ? 'ไปสอบ →' : 'เริ่มเรียน →'}</span></footer></Link>; })}</div></main>;
 }
 
+function ProfileRoute() {
+  const { username, progress } = useAuth();
+  const [data, setData] = useState<Curriculum | null>(null);
+  useEffect(() => { void import('../data/curriculum.json').then(({ default: loaded }) => setData(loaded)); }, []);
+  if (!username) return <Navigate to="/" replace />;
+  const passed = new Set(progress.passedSets);
+  const remembered = new Set(progress.remembered);
+  const readySets = data?.sets.filter((set) => set.itemIds.every((id) => remembered.has(id)) && !passed.has(set.id)) ?? [];
+  const plan = getDailySetPlan({ completedSets: passed.size, totalSets: 60, targetDate: '2026-10-17' });
+  return <main className="profile-page"><Link className="back-link" to="/">← กลับหน้าภารกิจ</Link><p className="eyebrow">MY LEARNING PROFILE</p><h1>{username}</h1><p className="activity-subtitle">ความก้าวหน้าของคุณซิงก์กับบัญชีนี้แล้ว</p><section className="profile-summary"><div><b>{progress.remembered.length}</b><span>คำที่เรียนแล้ว</span></div><div><b>{passed.size}</b><span>เซ็ตที่สอบผ่าน</span></div><div><b>{passed.size * 20}</b><span>คำที่จำได้แล้ว</span></div></section><section className="profile-plan"><h2>แผนถึง 17 ต.ค. 2026</h2><p>เหลือ {plan.remainingSets} เซ็ต · {plan.remainingDays} วัน</p><strong>ทำวันละ {plan.setsPerDay} เซ็ต ({plan.wordsPerDay} คำ)</strong></section><section className="profile-list"><h2>พร้อมสอบ</h2>{readySets.length ? <div>{readySets.map((set) => <Link key={set.id} to={`/exam/${set.id}`}><b>{set.id}</b><span>{set.category}</span><i>เริ่มสอบ →</i></Link>)}</div> : <p>เรียนให้ครบ 20 คำในเซ็ตเพื่อปลดล็อกข้อสอบ</p>}</section><section className="profile-list passed"><h2>สอบผ่านแล้ว</h2>{data && passed.size ? <div>{data.sets.filter((set) => passed.has(set.id)).map((set) => <Link key={set.id} to={`/learn/${set.id}`}><b>✓ {set.id}</b><span>{set.category}</span><i>จำได้แล้ว</i></Link>)}</div> : <p>ยังไม่มีเซ็ตที่สอบผ่าน</p>}</section></main>;
+}
+
 export function App() {
   return <AuthProvider><div className="app-shell">
     <Routes>
@@ -69,6 +82,7 @@ export function App() {
       <Route path="/games" element={<ModeHub kind="games" />} />
       <Route path="/exams" element={<ModeHub kind="exams" />} />
       <Route path="/self-check" element={<SelfAssessment />} />
+      <Route path="/profile" element={<ProfileRoute />} />
       <Route path="/practice/:setId" element={<PracticeRoute />} />
       <Route path="/exam/:setId" element={<ExamRoute />} />
       <Route path="*" element={<Navigate to="/" replace />} />
