@@ -38,9 +38,22 @@ export function AuthProvider({ children, client = getSupabaseClient() as AuthCli
     let active = true;
     void loadRemoteProgress(client as Required<AuthClient>, session.user.id).then((remote) => {
       if (!active) return;
-      localStorage.setItem('hsk-mission-remembered', JSON.stringify(remote.remembered));
-      localStorage.setItem('hsk-mission-exam-passed-sets', JSON.stringify(remote.passedSets));
-      setProgress(remote);
+      const migrationKey = `hsk-mission-progress-migrated-${session.user.id}`;
+      const localRemembered = JSON.parse(localStorage.getItem('hsk-mission-remembered') ?? '[]') as string[];
+      const localPassed = JSON.parse(localStorage.getItem('hsk-mission-exam-passed-sets') ?? '[]') as string[];
+      const importLocal = !localStorage.getItem(migrationKey);
+      const remembered = [...new Set([...remote.remembered, ...(importLocal ? localRemembered : [])])];
+      const passedSets = [...new Set([...remote.passedSets, ...(importLocal ? localPassed : [])])];
+      localStorage.setItem('hsk-mission-remembered', JSON.stringify(remembered));
+      localStorage.setItem('hsk-mission-exam-passed-sets', JSON.stringify(passedSets));
+      setProgress({ remembered, passedSets });
+      if (importLocal) {
+        const wordsBySet = localRemembered.reduce<Record<string, string[]>>((groups, wordId) => { const setId = `S${String(Math.ceil(Number(wordId.slice(1)) / 20)).padStart(2, '0')}`; (groups[setId] ??= []).push(wordId); return groups; }, {});
+        void Promise.all([
+          ...Object.entries(wordsBySet).flatMap(([setId, wordIds]) => wordIds.map((wordId) => saveRememberedWord(client as Required<AuthClient>, { userId: session.user.id, wordId, setId, studiedCount: wordIds.length, totalWords: 20 }))),
+          ...localPassed.map((setId) => savePassedSet(client as Required<AuthClient>, { userId: session.user.id, setId, totalWords: 20 })),
+        ]).then(() => localStorage.setItem(migrationKey, 'true')).catch(() => undefined);
+      }
     }).catch(() => { if (active) setProgress({ remembered: [], passedSets: [] }); });
     return () => { active = false; };
   }, [client, session?.user.id]);
