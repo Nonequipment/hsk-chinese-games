@@ -56,3 +56,5 @@ nav a, nav button { border: 0; background: transparent; color: #102a43; text-dec
 .exam-set-card{position:relative;overflow:hidden}.exam-set-card.passed{border:2px solid #6bc98c;background:#f3fff6}.passed-stamp{position:absolute;right:-13px;bottom:16px;z-index:1;transform:rotate(-14deg);padding:6px 14px;border:3px solid #15934b;border-radius:8px;color:#15934b;font-size:1.1rem!important;font-weight:900!important;letter-spacing:.04em;opacity:.9}.exam-set-card.passed>strong,.exam-set-card.passed>footer,.exam-set-card.passed>header{position:relative;z-index:2}
 
 .exam-set-card.passed footer{padding-right:148px}.exam-set-card.passed .passed-stamp{right:8px;bottom:8px}@media(max-width:520px){.exam-set-card.passed footer{padding-right:118px}.exam-set-card.passed .passed-stamp{padding:5px 10px;font-size:.92rem!important}}
+
+.library-page .set-card.done{position:relative;overflow:hidden}.library-page .set-card.done footer{padding-right:148px}.library-passed-stamp{right:8px!important;bottom:8px!important}@media(max-width:520px){.library-page .set-card.done footer{padding-right:118px}.library-passed-stamp{padding:5px 10px!important;font-size:.92rem!important}}
