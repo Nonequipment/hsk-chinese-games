@@ -13,6 +13,7 @@ it('keeps games outside the learning card', async () => {
 });
 
 it('renders a practice route with game modes', async () => {
+  const user = userEvent.setup();
   render(<MemoryRouter initialEntries={['/practice/S01']}><App /></MemoryRouter>);
   expect(await screen.findByRole('heading', { name: 'เกมฝึกฝน' })).toBeVisible();
   expect(screen.getByRole('button', { name: 'เลือกความหมาย' })).toBeVisible();
@@ -21,6 +22,8 @@ it('renders a practice route with game modes', async () => {
   expect(screen.getByRole('button', { name: 'ปิดเสียงอัตโนมัติ' })).toBeVisible();
   expect(screen.getByRole('button', { name: 'ซ่อนพินอิน' })).toBeVisible();
   expect(screen.getByRole('button', { name: 'สุ่มข้อใหม่' })).toBeVisible();
+  await user.click(screen.getByRole('button', { name: 'พิมพ์พินอินและโทน' }));
+  expect(screen.getByPlaceholderText('เช่น ba4ba')).toHaveFocus();
 });
 
 it('locks an exam until every card is remembered', async () => {
