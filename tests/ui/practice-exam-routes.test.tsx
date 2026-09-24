@@ -32,6 +32,8 @@ it('renders a practice route with game modes', async () => {
   expect(screen.queryByText('bàba')).not.toBeInTheDocument();
   await user.click(screen.getByRole('button', { name: 'ฝึกคัดจีน' }));
   expect(screen.getByLabelText('พื้นที่ฝึกคัดจีน')).toBeVisible();
+  expect(screen.getByRole('button', { name: 'ปิดลำดับขีด' })).toBeVisible();
+  expect(screen.getByRole('button', { name: 'กระดาษเปล่า' })).toBeVisible();
 });
 
 it('locks an exam until every card is remembered', async () => {
