@@ -14,7 +14,7 @@ it('keeps games outside the learning card', async () => {
 
 it('renders a practice route with game modes', async () => {
   const user = userEvent.setup();
-  render(<MemoryRouter initialEntries={['/practice/S01']}><App /></MemoryRouter>);
+  const { container } = render(<MemoryRouter initialEntries={['/practice/S01']}><App /></MemoryRouter>);
   expect(await screen.findByRole('heading', { name: 'เกมฝึกฝน' })).toBeVisible();
   expect(screen.getByRole('button', { name: 'เลือกความหมาย' })).toBeVisible();
   expect(screen.getByRole('button', { name: 'พิมพ์พินอินและโทน' })).toBeVisible();
@@ -32,6 +32,8 @@ it('renders a practice route with game modes', async () => {
   expect(screen.queryByText('bàba')).not.toBeInTheDocument();
   await user.click(screen.getByRole('button', { name: 'ฝึกคัดจีน' }));
   expect(screen.getByLabelText('พื้นที่ฝึกคัดจีน')).toBeVisible();
+  expect(container.querySelector('.copy-meaning')).toBeVisible();
+  expect(container.querySelector('.game-pinyin')).not.toBeInTheDocument();
   expect(screen.getByRole('button', { name: 'ปิดลำดับขีด' })).toBeVisible();
   expect(screen.getByRole('button', { name: 'กระดาษเปล่า' })).toBeVisible();
 });
