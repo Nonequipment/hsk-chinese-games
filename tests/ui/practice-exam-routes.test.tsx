@@ -20,6 +20,7 @@ it('renders a practice route with game modes', async () => {
   expect(screen.getByRole('button', { name: 'พิมพ์พินอินและโทน' })).toBeVisible();
   expect(screen.getByRole('button', { name: 'จับคู่การ์ด' })).toBeVisible();
   expect(screen.getByRole('button', { name: 'ฟังเสียงเลือกคำจีน' })).toBeVisible();
+  expect(screen.getByRole('button', { name: 'ฝึกคัดจีน' })).toBeVisible();
   expect(screen.queryByRole('button', { name: 'แยกโทน' })).not.toBeInTheDocument();
   expect(screen.getByRole('button', { name: 'ปิดเสียงอัตโนมัติ' })).toBeVisible();
   expect(screen.getByRole('button', { name: 'ซ่อนพินอิน' })).toBeVisible();
@@ -29,6 +30,8 @@ it('renders a practice route with game modes', async () => {
   await user.click(screen.getByRole('button', { name: 'ฟังเสียงเลือกคำจีน' }));
   expect(screen.getByRole('button', { name: '🔊 ฟังเสียงอีกครั้ง' })).toBeVisible();
   expect(screen.queryByText('bàba')).not.toBeInTheDocument();
+  await user.click(screen.getByRole('button', { name: 'ฝึกคัดจีน' }));
+  expect(screen.getByLabelText('พื้นที่ฝึกคัดจีน')).toBeVisible();
 });
 
 it('locks an exam until every card is remembered', async () => {

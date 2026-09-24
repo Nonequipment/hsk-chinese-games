@@ -63,3 +63,5 @@ nav a, nav button { border: 0; background: transparent; color: #102a43; text-dec
 
 .listen-prompt { display:block; margin:0 auto 1rem; min-height:52px; padding:0 1.1rem; border:0; border-radius:14px; background:#eaf3ff; color:#1d62d8; font:inherit; font-weight:800; }
 .game-prompt.listening-prompt { font-family:inherit; font-size:clamp(3.25rem, 16vw, 5rem); line-height:1; }
+
+.copy-practice{display:grid;justify-items:center;gap:9px;margin-top:12px;padding:16px;border:1px solid #d2e4fa;border-radius:20px;background:#f5f9ff}.copy-instruction{margin:0;color:#567391;font-size:.78rem;text-align:center}.copy-progress{color:#2064d8;font-size:.72rem;font-weight:800}.copy-canvas{display:grid;place-items:center;width:260px;max-width:100%;height:260px;border:1px solid #d9e7f8;border-radius:18px;background:#fff}.copy-practice button{min-height:44px;border:1px solid #cddff7;border-radius:13px;padding:0 15px;background:#fff;color:#1c60d4;font:inherit;font-size:.78rem;font-weight:800}
