@@ -18,6 +18,7 @@ it('renders a practice route with game modes', async () => {
   expect(await screen.findByRole('heading', { name: 'เกมฝึกฝน' })).toBeVisible();
   expect(screen.getByRole('button', { name: 'เลือกความหมาย' })).toBeVisible();
   expect(screen.getByRole('button', { name: 'พิมพ์พินอินและโทน' })).toBeVisible();
+  expect(screen.getByRole('button', { name: 'จับคู่การ์ด' })).toBeVisible();
   expect(screen.queryByRole('button', { name: 'แยกโทน' })).not.toBeInTheDocument();
   expect(screen.getByRole('button', { name: 'ปิดเสียงอัตโนมัติ' })).toBeVisible();
   expect(screen.getByRole('button', { name: 'ซ่อนพินอิน' })).toBeVisible();
