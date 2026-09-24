@@ -34,8 +34,11 @@ it('renders a practice route with game modes', async () => {
   expect(screen.getByLabelText('พื้นที่ฝึกคัดจีน')).toBeVisible();
   expect(container.querySelector('.copy-meaning')).toBeVisible();
   expect(container.querySelector('.game-pinyin')).not.toBeInTheDocument();
-  expect(screen.getByRole('button', { name: 'ปิดลำดับขีด' })).toBeVisible();
+  expect(screen.getByRole('button', { name: 'ตามลำดับขีด' })).toBeVisible();
   expect(screen.getByRole('button', { name: 'กระดาษเปล่า' })).toBeVisible();
+  await user.click(screen.getByRole('button', { name: 'กระดาษเปล่า' }));
+  expect(screen.getByRole('button', { name: 'กระดาษเปล่า' })).toHaveAttribute('aria-pressed', 'true');
+  expect(screen.getByRole('button', { name: 'ตามลำดับขีด' })).toHaveAttribute('aria-pressed', 'false');
 });
 
 it('locks an exam until every card is remembered', async () => {
